@@ -11,6 +11,8 @@ set(CMAKE_BUILD_TYPE Release)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+#link libraries
+link_directories( ${PROJECT_SOURCE_DIR}/lib )
 
 include_directories(AprilTags .)
 
@@ -27,3 +29,7 @@ file(GLOB CPP_FILES ${PROJECT_SOURCE_DIR}/src/*.cc)
 add_library(apriltags ${CPP_FILES})
 target_link_libraries(apriltags ${OpenCV_LIBS})
 target_link_libraries(apriltags ${Eigen_LIBS})
+
+add_executable(test_apriltag_mit src/test_apriltag_mit.cpp)
+target_link_libraries(test_apriltag_mit ${OpenCV_LIBS})
+target_link_libraries(test_apriltag_mit apriltag)
