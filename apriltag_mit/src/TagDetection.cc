@@ -148,14 +148,14 @@ void TagDetection::draw(cv::Mat& image) const {
   cv::line(image, cv::Point2f(p4.first, p4.second), cv::Point2f(p1.first, p1.second), cv::Scalar(255,0,255,0) );
 
   // mark center
-  cv::circle(image, cv::Point2f(cxy.first, cxy.second), 8, cv::Scalar(0,0,255,0), 2);
+  //cv::circle(image, cv::Point2f(cxy.first, cxy.second), 8, cv::Scalar(0,0,255,0), 2);
 
   // print ID
   std::ostringstream strSt;
-  strSt << "#" << id;
+  strSt << id;
   cv::putText(image, strSt.str(),
-              cv::Point2f(cxy.first + 10, cxy.second + 10),
-              cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255));
+              cv::Point2f(cxy.first - 5, cxy.second + 5),
+              cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0,0,255), 2);
 }
 
 } // namespace
