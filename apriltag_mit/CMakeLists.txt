@@ -32,4 +32,4 @@ target_link_libraries(apriltags ${Eigen_LIBS})
 
 add_executable(test_apriltag_mit src/test_apriltag_mit.cpp)
 target_link_libraries(test_apriltag_mit ${OpenCV_LIBS})
-target_link_libraries(test_apriltag_mit apriltag)
+target_link_libraries(test_apriltag_mit apriltags)
