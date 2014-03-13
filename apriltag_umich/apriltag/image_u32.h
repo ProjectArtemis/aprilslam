@@ -25,12 +25,11 @@
 #include "image_f32.h"
 
 typedef struct image_u32 image_u32_t;
-struct image_u32
-{
-    int width, height;
-    int stride;
+struct image_u32 {
+  int width, height;
+  int stride;
 
-    uint32_t *buf;
+  uint32_t *buf;
 };
 
 image_u32_t *image_u32_create(int width, int height);

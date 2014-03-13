@@ -22,54 +22,47 @@
 
 #include <math.h>
 
-static inline int iclamp(int a, int min, int max)
-{
-    if (a < min)
-        return min;
-    if (a > max)
-        return max;
-    return a;
+static inline int iclamp(int a, int min, int max) {
+  if (a < min)
+    return min;
+  if (a > max)
+    return max;
+  return a;
 }
 
-static inline double dclamp(double a, double min, double max)
-{
-    if (a < min)
-        return min;
-    if (a > max)
-        return max;
-    return a;
+static inline double dclamp(double a, double min, double max) {
+  if (a < min)
+    return min;
+  if (a > max)
+    return max;
+  return a;
 }
 
-static inline int isq(int v)
-{
-    return v*v;
+static inline int isq(int v) {
+  return v*v;
 }
 
-static inline float sq(float v)
-{
-    return v*v;
+static inline float sq(float v) {
+  return v*v;
 }
 
-static inline int imin(int a, int b)
-{
-    return a < b ? a : b;
+static inline int imin(int a, int b) {
+  return a < b ? a : b;
 }
 
-static inline int imax(int a, int b)
-{
-    return a < b ? b : a;
+static inline int imax(int a, int b) {
+  return a < b ? b : a;
 }
 
-static inline float mod2pi(float v)
-{
-    // XXX Dumb version
-    while (v < -M_PI)
-        v += 2*M_PI;
+static inline float mod2pi(float v) {
+  // XXX Dumb version
+  while (v < -M_PI)
+    v += 2*M_PI;
 
-    while (v >= M_PI)
-        v -= 2*M_PI;
+  while (v >= M_PI)
+    v -= 2*M_PI;
 
-    return v;
+  return v;
 }
 
 #endif

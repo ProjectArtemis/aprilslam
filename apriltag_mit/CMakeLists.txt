@@ -5,8 +5,6 @@ message(STATUS "Project: " ${PROJECT_NAME})
 message(STATUS "Source: " ${PROJECT_SOURCE_DIR})
 message(STATUS "Binary: " ${PROJECT_BINARY_DIR})
 
-set(CMAKE_BUILD_TYPE Release)
-
 #set the default path for built executables to the "bin" directory
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
@@ -24,6 +22,7 @@ find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 message(STATUS "OpenCV: " ${OpenCV_INCLUDE_DIRS})
 
+set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_FLAGS "-fPIC")
 file(GLOB CC_FILES ${PROJECT_SOURCE_DIR}/src/*.cc)
 add_library(apriltags ${CC_FILES})

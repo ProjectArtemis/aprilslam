@@ -34,15 +34,14 @@
 // This struct is factored out in order to support pluggable
 // segmentation systems.  Most users will not need to ever use this
 // struct.
-struct segment
-{
-    float p0[2];
-    float p1[2];
+struct segment {
+  float p0[2];
+  float p1[2];
 
-    float theta;
+  float theta;
 
-    // a list of the points that are near p1
-    zarray_t *neighbors;
+  // a list of the points that are near p1
+  zarray_t *neighbors;
 };
 
 // Represents a tag family. Every tag belongs to a tag family. Tag
@@ -50,187 +49,158 @@ struct segment
 // april.tag.TagFamilyGenerator and can be converted to C using
 // april.tag.TagToC.
 typedef struct april_tag_family april_tag_family_t;
-struct april_tag_family
-{
-    // How many codes are there in this tag family?
-    uint32_t ncodes;
+struct april_tag_family {
+  // How many codes are there in this tag family?
+  uint32_t ncodes;
 
-    // The codes in the family.
-    uint64_t *codes;
+  // The codes in the family.
+  uint64_t *codes;
 
-    // how wide (in bit-sizes) is the black border? (usually 1)
-    uint32_t black_border;
+  // how wide (in bit-sizes) is the black border? (usually 1)
+  uint32_t black_border;
 
-    // how many bits tall and wide is it? (e.g. 36bit tag ==> 6)
-    uint32_t d;
+  // how many bits tall and wide is it? (e.g. 36bit tag ==> 6)
+  uint32_t d;
 
-    // minimum hamming distance between any two codes. (e.g. 36h11 => 11)
-    uint32_t h;
+  // minimum hamming distance between any two codes. (e.g. 36h11 => 11)
+  uint32_t h;
 };
 
 // Represents a detector object. Upon creating a detector, all fields
 // are set to reasonable values, but can be overridden by accessing
 // these fields.
 typedef struct april_tag_detector april_tag_detector_t;
-struct april_tag_detector
-{
-    ///////////////////////////////////////////////////////////////
-    // User-configurable parameters.
+struct april_tag_detector {
+  ///////////////////////////////////////////////////////////////
+  // User-configurable parameters.
 
-    // How many threads should be used?
-    int nthreads;
+  // How many threads should be used?
+  int nthreads;
 
-    // detection of quads can be done on a lower-resolution image,
-    // improving speed at a cost of pose accuracy and a slight
-    // decrease in detection rate. Decoding the binary payload is
-    // still done at full resolution. .
-    float seg_decimate;
+  // detection of quads can be done on a lower-resolution image,
+  // improving speed at a cost of pose accuracy and a slight
+  // decrease in detection rate. Decoding the binary payload is
+  // still done at full resolution. .
+  int seg_decimate;
 
-    // What Gaussian blur should be applied to the segmented image?
-    // Parameter is the standard deviation in pixels.  Very noisy
-    // images benefit from non-zero values (e.g. 0.8).
-    float seg_sigma;
+  // What Gaussian blur should be applied to the segmented image?
+  // Parameter is the standard deviation in pixels.  Very noisy
+  // images benefit from non-zero values (e.g. 0.8).
+  float seg_sigma;
 
-    // During segmentation, ignore pixels whose gradient magnitude
-    // (squared) is less than the value below. This is computed with
-    // respect to pixel values [0, 255].
-    int min_mag;
+  // During segmentation, ignore pixels whose gradient magnitude
+  // (squared) is less than the value below. This is computed with
+  // respect to pixel values [0, 255].
+  int min_mag;
 
-    // During segmentation, we join clusters that have similar
-    // directions.  This threshold is the cosine of the maximum angle
-    // between two segments that will be joined.
-    float costhresh0;
+  // During segmentation, we join clusters that have similar
+  // directions.  This threshold is the cosine of the maximum angle
+  // between two segments that will be joined.
+  float costhresh0;
 
-    // Minimum number of pixels in a segment. Used to cull out silly
-    // small segments (and avoid subsequent processing on them). (User
-    // settable).
-    int min_segment_size;
+  // Minimum number of pixels in a segment. Used to cull out silly
+  // small segments (and avoid subsequent processing on them). (User
+  // settable).
+  int min_segment_size;
 
-    // minimum (squared) gradient for an edge. Used to cull out silly
-    // bad edges (and avoid subsequent processing on them). (User
-    // settable).
-    int min_edge_score;
+  // minimum (squared) gradient for an edge. Used to cull out silly
+  // bad edges (and avoid subsequent processing on them). (User
+  // settable).
+  int min_edge_score;
 
-    // When we build our model of black & white pixels, we add an
-    // extra check that the white model must be (overall) brighter
-    // than the black model.  How much brighter? (in pixel values,
-    // [0,255]). .
-    int min_white_black_diff;
+  // When we build our model of black & white pixels, we add an
+  // extra check that the white model must be (overall) brighter
+  // than the black model.  How much brighter? (in pixel values,
+  // [0,255]). .
+  int min_white_black_diff;
 
-    // Used to cull very short segments (in pixels). .
-    float min_segment_length;
+  // Used to cull very short segments (in pixels). .
+  float min_segment_length;
 
-    // how far away can two segments be (in pixels) for them to be
-    // considered "adjacent". Larger values lead to more aggressive
-    // quad-making. .
-    float max_segment_distance;
+  // how far away can two segments be (in pixels) for them to be
+  // considered "adjacent". Larger values lead to more aggressive
+  // quad-making. .
+  float max_segment_distance;
 
-    // Minimum tag size (in pixels). Used to cull too-small
-    // tags. .
-    float min_tag_size;
+  // Minimum tag size (in pixels). Used to cull too-small
+  // tags. .
+  float min_tag_size;
 
-    // Maximum aspect ratio, used to cull hopelessly distorted
-    // tags.
-    float max_aspect_ratio;
+  // Maximum aspect ratio, used to cull hopelessly distorted
+  // tags.
+  float max_aspect_ratio;
 
-    // Reject quads where pairs of edges have angles that are close to
-    // straight or close to 180 degrees. Zero means that no quads are
-    // rejected. (In radians).
-    float critical_rad;
+  // Reject quads where pairs of edges have angles that are close to
+  // straight or close to 180 degrees. Zero means that no quads are
+  // rejected. (In radians).
+  float critical_rad;
 
-    // EXPERIMENTAL. When non-zero, enables an aggressive optimization to
-    // improve detection rates by twiddling the quad boundaries. This mode is
-    // relatively slow and increases false positive rate and might decrease
-    // pose estimation accuracy.
-    int small_tag_refinement;
+  // EXPERIMENTAL. When non-zero, enables an aggressive optimization to
+  // improve detection rates by twiddling the quad boundaries. This mode is
+  // relatively slow and increases false positive rate and might decrease
+  // pose estimation accuracy.
+  int small_tag_refinement;
 
-    // When non-zero, write a variety of debugging images to the
-    // current working directory at various stages through the
-    // detection process. (Somewhat slow).
-    int debug;
+  // When non-zero, write a variety of debugging images to the
+  // current working directory at various stages through the
+  // detection process. (Somewhat slow).
+  int debug;
 
-    // when searching for neighbors, we prune the list of candidates
-    // based on a weighted combination of features. When the number of
-    // neighbor candidates is relatively small, pruning them is
-    // unnecessary from a computational perspective. However, on
-    // cluttered background, pruning can be very helpful in reducing
-    // wasted search time..
-    //
-    // k1: An ideal "head on" tag has 90 degree turns between
-    // edges. We can penalize deviations from this. (should be
-    // negative)
-    //
-    // k2: The distance between the end of the last segment and the
-    // beginning of the current segment is dist2. The length of the
-    // last segment is length2. Ideally, we want dist2 to be zero, but
-    // it will generally be non-zero. (should be negative)
-    //
-    // k3: We can assign a bonus for long edges.
-    //
-    // k1*fabs(dtheta - M_PI/2) + k2*sqrtf(dist2/length2) + k3*sqrtf(dist3) + 1
-    //
-    // If the expression is greater than or equal to zero, the neighbor is accepted.
-    //
-    float neighbor_k1;
-    float neighbor_k2;
-    float neighbor_k3;
+  ///////////////////////////////////////////////////////////////
+  // Statistics relating to last processed frame
+  timeprofile_t *tp;
 
-    ///////////////////////////////////////////////////////////////
-    // Statistics relating to last processed frame
-    timeprofile_t *tp;
+  uint32_t nedges;
+  uint32_t nsegments;
+  uint32_t nquads;
 
-    uint32_t nedges;
-    uint32_t nsegments;
-    uint32_t nquads;
+  ///////////////////////////////////////////////////////////////
+  // Internal variables below
 
-    ///////////////////////////////////////////////////////////////
-    // Internal variables below
+  // Not freed on april_tag_destroy; a tag family can be shared
+  // between multiple users. The user should ultimately destroy the
+  // tag family passed into the constructor.
+  zarray_t *tag_families;
 
-    // Not freed on april_tag_destroy; a tag family can be shared
-    // between multiple users. The user should ultimately destroy the
-    // tag family passed into the constructor.
-    zarray_t *tag_families;
+  // Used to manage multi-threading.
+  workerpool_t *wp;
 
-    // Used to manage multi-threading.
-    workerpool_t *wp;
-
-    // Used for thread safety.
-    pthread_mutex_t mutex;
+  // Used for thread safety.
+  pthread_mutex_t mutex;
 };
 
 // Represents the detection of a tag. These are returned to the user
 // and must be individually destroyed by the user.
 typedef struct april_tag_detection april_tag_detection_t;
-struct april_tag_detection
-{
-    // a pointer for convenience. not freed by april_tag_detection_destroy.
-    april_tag_family_t *family;
+struct april_tag_detection {
+  // a pointer for convenience. not freed by april_tag_detection_destroy.
+  april_tag_family_t *family;
 
-    // The decoded ID of the tag
-    int id;
+  // The decoded ID of the tag
+  int id;
 
-    // How many error bits were corrected? Note: accepting large numbers of
-    // corrected errors leads to greatly increased false positive rates.
-    int hamming;
+  // How many error bits were corrected? Note: accepting large numbers of
+  // corrected errors leads to greatly increased false positive rates.
+  int hamming;
 
-    // A measure of the quality of the binary decoding process: the
-    // average difference between the intensity of a data bit versus
-    // the decision threshold. Higher numbers roughly indicate better
-    // decodes.
-    float goodness;
+  // A measure of the quality of the binary decoding process: the
+  // average difference between the intensity of a data bit versus
+  // the decision threshold. Higher numbers roughly indicate better
+  // decodes.
+  float goodness;
 
-    // The 3x3 homography matrix describing the projection from an
-    // "ideal" tag (with corners at (-1,-1), (1,-1), (1,1), and (-1,
-    // 1)) to pixels in the image. This matrix will be freed by
-    // april_tag_detection_destroy.
-    matd_t *H;
+  // The 3x3 homography matrix describing the projection from an
+  // "ideal" tag (with corners at (-1,-1), (1,-1), (1,1), and (-1,
+  // 1)) to pixels in the image. This matrix will be freed by
+  // april_tag_detection_destroy.
+  matd_t *H;
 
-    // The center of the detection in image pixel coordinates.
-    double c[2];
+  // The center of the detection in image pixel coordinates.
+  double c[2];
 
-    // The corners of the tag in image pixel coordinates. These always
-    // wrap counter-clock wise around the tag.
-    double p[4][2];
+  // The corners of the tag in image pixel coordinates. These always
+  // wrap counter-clock wise around the tag.
+  double p[4][2];
 };
 
 // Create an april tag detector. After creation, parameters may be

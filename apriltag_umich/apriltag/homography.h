@@ -30,9 +30,9 @@ matd_t *homography_to_pose(const matd_t *H, double fx, double fy, double cx, dou
 matd_t *homography_to_model_view(const matd_t *H, double F, double G, double A, double B, double C, double D);
 
 /*
- static inline void homography_project01(const matd_t *H, double x, double y, double *ox, double *oy)
-{
-    homography_project(H, 2*x - 1, 2*y - 1, ox, oy);
-}
-*/
+   static inline void homography_project01(const matd_t *H, double x, double y, double *ox, double *oy)
+   {
+   homography_project(H, 2*x - 1, 2*y - 1, ox, oy);
+   }
+   */
 #endif

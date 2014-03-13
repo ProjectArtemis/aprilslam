@@ -24,12 +24,11 @@
 
 typedef struct image_f32 image_f32_t;
 
-struct image_f32
-{
-    int width, height;
-    int stride; // in units of floats
+struct image_f32 {
+  int width, height;
+  int stride; // in units of floats
 
-    float *buf; // indexed as buf[y*stride + x]
+  float *buf; // indexed as buf[y*stride + x]
 };
 
 #include "image_u8.h"

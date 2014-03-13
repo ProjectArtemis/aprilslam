@@ -22,15 +22,15 @@
 
 unionfind_t *unionfind_create(uint32_t maxid)
 {
-    unionfind_t *uf = (unionfind_t*) calloc(1, sizeof(unionfind_t));
-    uf->maxid = maxid;
-    uf->data = (struct ufrec*) calloc(maxid+1, sizeof(struct ufrec));
+  unionfind_t *uf = (unionfind_t*) calloc(1, sizeof(unionfind_t));
+  uf->maxid = maxid;
+  uf->data = (struct ufrec*) calloc(maxid + 1, sizeof(struct ufrec));
 
-    return uf;
+  return uf;
 }
 
 void unionfind_destroy(unionfind_t *uf)
 {
-    free(uf->data);
-    free(uf);
+  free(uf->data);
+  free(uf);
 }

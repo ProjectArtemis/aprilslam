@@ -23,31 +23,31 @@
 
 image_f32_t *image_f32_create(int width, int height)
 {
-    image_f32_t *fim = (image_f32_t*) calloc(1, sizeof(image_f32_t));
+  image_f32_t *fim = (image_f32_t*) calloc(1, sizeof(image_f32_t));
 
-    fim->width = width;
-    fim->height = height;
-    fim->stride = width; // XXX do better alignment
+  fim->width = width;
+  fim->height = height;
+  fim->stride = width; // XXX do better alignment
 
-    fim->buf = calloc(fim->height * fim->stride, sizeof(float));
+  fim->buf = calloc(fim->height * fim->stride, sizeof(float));
 
-    return fim;
+  return fim;
 }
 
 // scales by 1/255u
 image_f32_t *image_f32_create_from_u8(image_u8_t *im)
 {
-    image_f32_t *fim = image_f32_create(im->width, im->height);
+  image_f32_t *fim = image_f32_create(im->width, im->height);
 
-    for (int y = 0; y < fim->height; y++)
-        for (int x = 0; x < fim->width; x++)
-            fim->buf[y*fim->stride + x] = im->buf[y*im->stride + x] / 255.0f;
+  for (int y = 0; y < fim->height; y++)
+    for (int x = 0; x < fim->width; x++)
+      fim->buf[y * fim->stride + x] = im->buf[y * im->stride + x] / 255.0f;
 
-    return fim;
+  return fim;
 }
 
 void image_f32_destroy(image_f32_t *im)
 {
-    free(im->buf);
-    free(im);
+  free(im->buf);
+  free(im);
 }

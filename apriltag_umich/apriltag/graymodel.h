@@ -23,13 +23,12 @@
 #include "matd.h"
 
 typedef struct graymodel graymodel_t;
-struct graymodel
-{
-    matd_t *A;
-    matd_t *b;
-    matd_t *x;
+struct graymodel {
+  matd_t *A;
+  matd_t *b;
+  matd_t *x;
 
-    int n;
+  int n;
 };
 
 graymodel_t *graymodel_create();

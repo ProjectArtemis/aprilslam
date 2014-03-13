@@ -9,12 +9,16 @@ message(STATUS "Binary: " ${PROJECT_BINARY_DIR})
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+#link libraries
+link_directories(${PROJECT_SOURCE_DIR}/lib)
+
+include_directories(apriltag .)
 
 find_package (Threads)
-include_directories(apriltag .)
 
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
+message(STATUS "OpenCV: " ${OpenCV_INCLUDE_DIRS})
 
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_C_FLAGS "-std=gnu99 -fPIC")

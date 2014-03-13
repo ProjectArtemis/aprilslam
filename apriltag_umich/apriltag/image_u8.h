@@ -23,12 +23,11 @@
 #include <stdint.h>
 
 typedef struct image_u8 image_u8_t;
-struct image_u8
-{
-    int width, height;
-    int stride;
+struct image_u8 {
+  int width, height;
+  int stride;
 
-    uint8_t *buf;
+  uint8_t *buf;
 };
 
 #include "image_f32.h"
@@ -50,8 +49,8 @@ int image_u8_write_pgm(const image_u8_t *im, const char *path);
 void image_u8_darken(image_u8_t *im);
 void image_u8_gaussian_blur(image_u8_t *im, double sigma, int k);
 
-// 1.5, 2, 3, 4, ... supported
-image_u8_t *image_u8_decimate(image_u8_t *im, float factor);
+// NB: only 2 and 3 supported.
+image_u8_t *image_u8_decimate(image_u8_t *im, int factor);
 
 // rotate the image by 'rad' radians. (Rotated in the "intuitive
 // sense", i.e., if Y were up. When input values are unavailable, the

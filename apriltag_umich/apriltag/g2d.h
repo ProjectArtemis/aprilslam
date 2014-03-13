@@ -21,12 +21,11 @@
 ////////////////////////////////////////////////////////////////////
 // Lines
 
-typedef struct
-{
-    // Internal representation: a point that the line goes through (p) and
-    // the direction of the line (u).
-    double p[2];
-    double u[2]; // always a unit vector
+typedef struct {
+  // Internal representation: a point that the line goes through (p) and
+  // the direction of the line (u).
+  double p[2];
+  double u[2]; // always a unit vector
 } g2d_line_t;
 
 // initialize a line object.
@@ -44,10 +43,9 @@ int g2d_line_intersect_line(const g2d_line_t *linea, const g2d_line_t *lineb, do
 ////////////////////////////////////////////////////////////////////
 // Line Segments. line.p is always one endpoint; p1 is the other
 // endpoint.
-typedef struct
-{
-    g2d_line_t line;
-    double p1[2];
+typedef struct {
+  g2d_line_t line;
+  double p1[2];
 } g2d_line_segment_t;
 
 void g2d_line_segment_init_from_points(g2d_line_segment_t *seg, const double p0[2], const double p1[2]);

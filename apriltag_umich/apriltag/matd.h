@@ -22,26 +22,24 @@
 
 #define MATD_EPS 1e-8
 
-typedef struct
-{
-    int nrows, ncols;
+typedef struct {
+  int nrows, ncols;
 
-    // data in row-major order (index = rows*ncols + col)
-    double *data;
+  // data in row-major order (index = rows*ncols + col)
+  double *data;
 } matd_t;
 
 #define MAT_EL(m, row,col) (m)->data[((row)*(m)->ncols + (col))]
 
-typedef struct
-{
-    // was the input matrix singular? When a near-zero pivot is found,
-    // it is replaced with a value of MATD_EPS so that an approximate inverse
-    // can be found. This flag is set to indicate that this has happened.
-    int singular;
+typedef struct {
+  // was the input matrix singular? When a near-zero pivot is found,
+  // it is replaced with a value of MATD_EPS so that an approximate inverse
+  // can be found. This flag is set to indicate that this has happened.
+  int singular;
 
-    int *piv; // permutation indices
-    int pivsign;
-    matd_t *lu; // combined L and U matrices, permuted.
+  int *piv; // permutation indices
+  int pivsign;
+  matd_t *lu; // combined L and U matrices, permuted.
 } matd_lu_t;
 
 //////////////////////////////////
@@ -89,27 +87,15 @@ matd_t *matd_op(const char *expr, ...);
 ////////////////////////////////
 // LU Decomposition
 
-/** The LU decomposition exists for square, full-rank matrices. This
- * function computes the factorization; actually doing something with
- * the factorization requires another call. The caller should call
- * matd_lu_destroy on the return value. Note that for rank-deficient
- * matrices, MATD_EPS will be substituted for the zero pivot, which
- * allows the factorization to continue (albeit with poor numerical
- * stability).
- **/
+// The matd_lu_t operation returned "owns" the enclosed LU matrix. It
+// is not expected that the returned object is itself useful to users.
 matd_lu_t *matd_lu(const matd_t *a);
 void matd_lu_destroy(matd_lu_t *mlu);
-
-/** Compute the determinant of the matrix. **/
 double matd_lu_det(const matd_lu_t *lu);
-
-/** Retrieve the L factor. **/
 matd_t *matd_lu_l(const matd_lu_t *lu);
-
-/** Retrieve the U factor. **/
 matd_t *matd_lu_u(const matd_lu_t *lu);
-
-/** Compute an answer to Ax = b. **/
 matd_t *matd_lu_solve(const matd_lu_t *mlu, const matd_t *b);
+
+
 
 #endif
