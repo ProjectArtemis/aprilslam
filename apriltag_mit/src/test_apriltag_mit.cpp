@@ -6,6 +6,8 @@
 #include "AprilTags/TagDetector.h"
 #include "AprilTags/Tag36h11.h"
 
+AprilTags::TagDetector tag_detector(AprilTags::tagCodes36h11);
+
 int main(int argc, char** argv) {
   cv::VideoCapture cap(0); // open the default camera
   cap.set(CV_CAP_PROP_FRAME_WIDTH, 320);
@@ -21,7 +23,6 @@ int main(int argc, char** argv) {
     cv::cvtColor(image, image_gray, CV_BGR2GRAY); // convert rgb to gray
 
     // detect April tags
-    AprilTags::TagDetector tag_detector(AprilTags::tagCodes36h11);
     vector<AprilTags::TagDetection> detections = tag_detector.extractTags(image_gray);
 
     for (int i = 0; i < detections.size(); ++i)

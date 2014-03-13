@@ -11,16 +11,16 @@ extern "C" {
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 
-int main(int, char**) {
+//Detect April tags
+april_tag_family_t *tf = tag36h11_create();
+april_tag_detector_t *td = april_tag_detector_create(tf);
+
+int main(int argc, char** argv) {
   cv::VideoCapture cap(0); // open the default camera
   cap.set(CV_CAP_PROP_FRAME_WIDTH, 320);
   cap.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
   if(!cap.isOpened())  // check if we succeeded
     return -1;
-
-  //Detect April tags
-  april_tag_family_t *tf = tag36h11_create();
-  april_tag_detector_t *td = april_tag_detector_create(tf);
 
   cv::namedWindow("video", 1);
   for(;;) {
