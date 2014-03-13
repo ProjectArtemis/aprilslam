@@ -13,7 +13,6 @@ int main(int argc, char** argv) {
   if(!cap.isOpened())  // check if we succeeded
     return -1;
 
-
   cv::namedWindow("camera", 1);
   for(;;) {
     cv::Mat image;
@@ -24,7 +23,6 @@ int main(int argc, char** argv) {
     // detect April tags
     AprilTags::TagDetector tag_detector(AprilTags::tagCodes36h11);
     vector<AprilTags::TagDetection> detections = tag_detector.extractTags(image_gray);
-    //std::cout << detections.size() << "tags decteted: " << std::endl;
 
     for (int i = 0; i < detections.size(); ++i)
       detections[i].draw(image);
