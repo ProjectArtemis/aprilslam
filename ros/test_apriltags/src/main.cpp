@@ -14,7 +14,7 @@
 
 #include <vector>
 
-#define BUILD_MIT
+#define BUILD_UMICH
 
 #if defined(BUILD_UMICH)
 extern "C" {
@@ -60,11 +60,12 @@ void cam_callback(const sensor_msgs::Image::ConstPtr& img)
     image_u8_t *im = image_u8_create(image_gray.cols, image_gray.rows);
     //  lazy, just copy for now
     memcpy(im->buf, image_gray.ptr(), image_gray.cols * image_gray.rows);
+    im->stride = img->width;
 
     //  detect tags
     zarray_t *detections = april_tag_detector_detect(td, im);
     
-    for (int i = 0; i < zarray_size(detections); i++) 
+    for (size_t i = 0; i < zarray_size(detections); i++) 
     {
         april_tag_detection_t *det;
         zarray_get(detections, i, &det);
@@ -95,7 +96,7 @@ void cam_callback(const sensor_msgs::Image::ConstPtr& img)
     
 #endif
     
-    ROS_INFO("Found %lu tags\n", corners.size());
+    ROS_INFO("Found %lu corners\n", corners.size());
     
     //  draw and display
     for (size_t i=0; i < corners.size(); i++) {
