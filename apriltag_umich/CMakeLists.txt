@@ -23,6 +23,7 @@ message(STATUS "OpenCV: " ${OpenCV_INCLUDE_DIRS})
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_C_FLAGS "-std=gnu99 -fPIC")
 file(GLOB C_FILES ${PROJECT_SOURCE_DIR}/src/*.c)
+list(REMOVE_ITEM C_FILES ${PROJECT_SOURCE_DIR}/src/tagtest.c)
 add_library(apriltag ${C_FILES})
 target_link_libraries (apriltag ${CMAKE_THREAD_LIBS_INIT})
 
