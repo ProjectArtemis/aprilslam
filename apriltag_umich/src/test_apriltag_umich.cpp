@@ -7,6 +7,7 @@ extern "C" {
 }
 #include <sstream>
 #include <iostream>
+#include <unistd.h>
 #include "opencv2/core/core.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
@@ -17,20 +18,26 @@ april_tag_detector_t *td = april_tag_detector_create(tf);
 
 int main(int argc, char **argv) {
   cv::VideoCapture cap(0); // open the default camera
+  sleep(1);
   cap.set(CV_CAP_PROP_FRAME_WIDTH, 320);
   cap.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
-  if (!cap.isOpened()) // check if we succeeded
+  if (!cap.isOpened()) {// check if we succeeded
     return -1;
+  }
 
   cv::namedWindow("video", 1);
   for (;;) {
     cv::Mat image;
     cv::Mat image_gray;
     cap.read(image); // get a new frame from camera
+    //std::cout << image.flags << std::endl;
     cv::cvtColor(image, image_gray, CV_BGR2GRAY); // convert rgb to gray
 
-    image_u8_t *im = image_u8_create(image_gray.cols, image_gray.rows);
-    im->buf = (uint8_t *) image_gray.data;
+    //image_u8_t *im = image_u8_create(image_gray.cols, image_gray.rows);
+    image_u8_t *im = image_u8_create_from_gray(image_gray.cols,
+                     image_gray.rows,
+                     image_gray.data);
+    //im->buf = (uint8_t *) image_gray.data;
 
     zarray_t *detections = april_tag_detector_detect(td, im);
 
@@ -67,11 +74,13 @@ int main(int argc, char **argv) {
     }
 
     zarray_destroy(detections);
+    image_u8_destroy(im);
 
     cv::imshow("video", image); // display frame
 
-    if (cv::waitKey(30) >= 0)
+    if (cv::waitKey(30) >= 0) {
       break;
+    }
   }
 
   return 0;

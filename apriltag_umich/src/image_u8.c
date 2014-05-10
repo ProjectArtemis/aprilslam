@@ -43,6 +43,21 @@ image_u8_t *image_u8_create(int width, int height)
   return im;
 }
 
+/* Create image_u8 from opencv grayscale mat */
+image_u8_t *image_u8_create_from_gray(int width, int height, uint8_t *gray)
+{
+  image_u8_t *im = (image_u8_t *) calloc(1, sizeof(image_u8_t));
+
+  im->width = width;
+  im->height = height;
+  im->stride = width;
+
+  im->buf = (uint8_t *) calloc(1, im->height * im->stride);
+  memcpy(im->buf, gray, im->height * im->stride);
+
+  return im;
+}
+
 image_u8_t *image_u8_copy(const image_u8_t *src)
 {
   image_u8_t *im = (image_u8_t*) calloc(1, sizeof(image_u8_t));

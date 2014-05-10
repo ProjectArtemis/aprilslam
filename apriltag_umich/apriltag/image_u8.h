@@ -33,6 +33,7 @@ struct image_u8 {
 #include "image_f32.h"
 
 image_u8_t *image_u8_create(int width, int height);
+image_u8_t *image_u8_create_from_gray(int width, int height, uint8_t *gray);
 image_u8_t *image_u8_create_from_rgb3(int width, int height, uint8_t *rgb, int stride);
 image_u8_t *image_u8_create_from_f32(image_f32_t *fim);
 image_u8_t *image_u8_create_from_pnm(const char *path);
