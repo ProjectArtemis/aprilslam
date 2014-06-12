@@ -26,15 +26,13 @@
 
 // correspondences is a list of float[4]s, consisting of the points x
 // and y concatenated. We will compute a homography such that y = Hx
-matd_t *homography_compute(zarray_t *correspondences)
-{
+matd_t *homography_compute(zarray_t *correspondences) {
   // compute centroids of both sets of points (yields a better
   // conditioned information matrix)
   double x_cx = 0, x_cy = 0;
   double y_cx = 0, y_cy = 0;
 
-  for (int i = 0; i < zarray_size(correspondences); i++)
-  {
+  for (int i = 0; i < zarray_size(correspondences); i++) {
     float *c;
     zarray_get_volatile(correspondences, i, &c);
 
@@ -55,8 +53,7 @@ matd_t *homography_compute(zarray_t *correspondences)
   // doubles.
 
   matd_t *A = matd_create(9, 9);
-  for (int i = 0; i < zarray_size(correspondences); i++)
-  {
+  for (int i = 0; i < zarray_size(correspondences); i++) {
     float *c;
     zarray_get_volatile(correspondences, i, &c);
 
@@ -156,14 +153,12 @@ matd_t *homography_compute(zarray_t *correspondences)
 
   // make symmetric
   for (int i = 0; i < 9; i++)
-    for (int j = i + 1; j < 9; j++)
-      MAT_EL(A, j, i) = MAT_EL(A, i, j);
+    for (int j = i + 1; j < 9; j++) MAT_EL(A, j, i) = MAT_EL(A, i, j);
 
   matd_t *Ainv = matd_inverse(A);
 
   double scale = 0;
-  for (int i = 0; i < 9; i++)
-    scale += sq(MAT_EL(Ainv, i, 0));
+  for (int i = 0; i < 9; i++) scale += sq(MAT_EL(Ainv, i, 0));
   scale = sqrt(scale);
 
   matd_t *H = matd_create(3, 3);
@@ -190,8 +185,8 @@ matd_t *homography_compute(zarray_t *correspondences)
   return H2;
 }
 
-void homography_project(const matd_t *H, double x, double y, double *ox, double *oy)
-{
+void homography_project(const matd_t *H, double x, double y, double *ox,
+                        double *oy) {
   double xx = MAT_EL(H, 0, 0) * x + MAT_EL(H, 0, 1) * y + MAT_EL(H, 0, 2);
   double yy = MAT_EL(H, 1, 0) * x + MAT_EL(H, 1, 1) * y + MAT_EL(H, 1, 2);
   double zz = MAT_EL(H, 2, 0) * x + MAT_EL(H, 2, 1) * y + MAT_EL(H, 2, 2);
@@ -205,10 +200,14 @@ void homography_project(const matd_t *H, double x, double y, double *ox, double 
 // [  0 fy cy 0 ]
 // [  0  0  1 0 ]
 //
-// And that the homography is equal to the projection matrix times the model matrix,
-// recover the model matrix (which is returned). Note that the third column of the model
-// matrix is missing in the expresison below, reflecting the fact that the homography assumes
-// all points are at z=0 (i.e., planar) and that the element of z is thus omitted.
+// And that the homography is equal to the projection matrix times the model
+// matrix,
+// recover the model matrix (which is returned). Note that the third column of
+// the model
+// matrix is missing in the expresison below, reflecting the fact that the
+// homography assumes
+// all points are at z=0 (i.e., planar) and that the element of z is thus
+// omitted.
 // (3x1 instead of 4x1).
 //
 // [ fx 0  cx 0 ] [ R00  R01  TX ]    [ H00 H01 H02 ]
@@ -216,7 +215,8 @@ void homography_project(const matd_t *H, double x, double y, double *ox, double 
 // [  0  0  1 0 ] [ R20  R21  TZ ] =  [ H20 H21 H22 ]
 //                [  0    0    1 ]
 //
-// fx*R00 + cx*R20 = H00   (note, H only known up to scale; some additional adjustments required; see code.)
+// fx*R00 + cx*R20 = H00   (note, H only known up to scale; some additional
+// adjustments required; see code.)
 // fx*R01 + cx*R21 = H01
 // fx*TX  + cx*TZ  = H02
 // fy*R10 + cy*R20 = H10
@@ -226,20 +226,21 @@ void homography_project(const matd_t *H, double x, double y, double *ox, double 
 // R21 = H21
 // TZ  = H22
 
-matd_t *homography_to_pose(const matd_t *H, double fx, double fy, double cx, double cy)
-{
+matd_t *homography_to_pose(const matd_t *H, double fx, double fy, double cx,
+                           double cy) {
   matd_t *M = matd_create(4, 4);
 
-  // Note that every variable that we compute is proportional to the scale factor of H.
+  // Note that every variable that we compute is proportional to the scale
+  // factor of H.
   double R20 = MAT_EL(H, 2, 0);
   double R21 = MAT_EL(H, 2, 1);
-  double TZ  = MAT_EL(H, 2, 2);
+  double TZ = MAT_EL(H, 2, 2);
   double R00 = (MAT_EL(H, 0, 0) - cx * R20) / fx;
   double R01 = (MAT_EL(H, 0, 1) - cx * R21) / fx;
-  double TX  = (MAT_EL(H, 0, 2) - cx * TZ)  / fx;
+  double TX = (MAT_EL(H, 0, 2) - cx * TZ) / fx;
   double R10 = (MAT_EL(H, 1, 0) - cy * R20) / fy;
   double R11 = (MAT_EL(H, 1, 1) - cy * R21) / fy;
-  double TY  = (MAT_EL(H, 1, 2) - cy * TZ)  / fy;
+  double TY = (MAT_EL(H, 1, 2) - cy * TZ) / fy;
 
   // compute the scale by requiring that the rotation columns are unit length
   // (Use geometric average of the two length vectors we have)
@@ -248,33 +249,28 @@ matd_t *homography_to_pose(const matd_t *H, double fx, double fy, double cx, dou
   double s = 1.0 / sqrtf(length1 * length2);
 
   // get sign of S by requiring the tag to be behind the camera.
-  if (TZ > 0)
-    s *= -1;
+  if (TZ > 0) s *= -1;
 
   R20 *= s;
   R21 *= s;
-  TZ  *= s;
+  TZ *= s;
   R00 *= s;
   R01 *= s;
-  TX  *= s;
+  TX *= s;
   R10 *= s;
   R11 *= s;
-  TY  *= s;
+  TY *= s;
 
-  // now recover [R02 R12 R22] by noting that it is the cross product of the other two columns.
+  // now recover [R02 R12 R22] by noting that it is the cross product of the
+  // other two columns.
   double R02 = R10 * R21 - R20 * R11;
   double R12 = R20 * R01 - R00 * R21;
   double R22 = R00 * R11 - R10 * R01;
 
   // TODO XXX: Improve rotation matrix by applying polar decomposition.
 
-  return matd_create_data(4, 4, (double[])
-  {
-    R00, R01, R02, TX,
-         R10, R11, R12, TY,
-         R20, R21, R22, TZ,
-         0, 0, 0, 1
-  });
+  return matd_create_data(4, 4, (double[]) {R00, R01, R02, TX, R10, R11, R12,
+                                            TY, R20, R21, R22, TZ, 0, 0, 0, 1});
   return M;
 }
 
@@ -286,20 +282,21 @@ matd_t *homography_to_pose(const matd_t *H, double fx, double fy, double cx, dou
 // [ 0  0  C  D ]
 // [ 0  0 -1  0 ]
 
-matd_t *homography_to_model_view(const matd_t *H, double F, double G, double A, double B, double C, double D)
-{
+matd_t *homography_to_model_view(const matd_t *H, double F, double G, double A,
+                                 double B, double C, double D) {
   matd_t *M = matd_create(4, 4);
 
-  // Note that every variable that we compute is proportional to the scale factor of H.
+  // Note that every variable that we compute is proportional to the scale
+  // factor of H.
   double R20 = -MAT_EL(H, 2, 0);
   double R21 = -MAT_EL(H, 2, 1);
-  double TZ  = -MAT_EL(H, 2, 2);
+  double TZ = -MAT_EL(H, 2, 2);
   double R00 = (MAT_EL(H, 0, 0) - A * R20) / F;
   double R01 = (MAT_EL(H, 0, 1) - A * R21) / F;
-  double TX  = (MAT_EL(H, 0, 2) - A * TZ)  / F;
+  double TX = (MAT_EL(H, 0, 2) - A * TZ) / F;
   double R10 = (MAT_EL(H, 1, 0) - B * R20) / G;
   double R11 = (MAT_EL(H, 1, 1) - B * R21) / G;
-  double TY  = (MAT_EL(H, 1, 2) - B * TZ)  / G;
+  double TY = (MAT_EL(H, 1, 2) - B * TZ) / G;
 
   // compute the scale by requiring that the rotation columns are unit length
   // (Use geometric average of the two length vectors we have)
@@ -308,33 +305,27 @@ matd_t *homography_to_model_view(const matd_t *H, double F, double G, double A, 
   double s = 1.0 / sqrtf(length1 * length2);
 
   // get sign of S by requiring the tag to be behind the camera.
-  if (TZ > 0)
-    s *= -1;
+  if (TZ > 0) s *= -1;
 
   R20 *= s;
   R21 *= s;
-  TZ  *= s;
+  TZ *= s;
   R00 *= s;
   R01 *= s;
-  TX  *= s;
+  TX *= s;
   R10 *= s;
   R11 *= s;
-  TY  *= s;
+  TY *= s;
 
-  // now recover [R02 R12 R22] by noting that it is the cross product of the other two columns.
+  // now recover [R02 R12 R22] by noting that it is the cross product of the
+  // other two columns.
   double R02 = R10 * R21 - R20 * R11;
   double R12 = R20 * R01 - R00 * R21;
   double R22 = R00 * R11 - R10 * R01;
 
   // TODO XXX: Improve rotation matrix by applying polar decomposition.
 
-  return matd_create_data(4, 4, (double[])
-  {
-    R00, R01, R02, TX,
-         R10, R11, R12, TY,
-         R20, R21, R22, TZ,
-         0, 0, 0, 1
-  });
+  return matd_create_data(4, 4, (double[]) {R00, R01, R02, TX, R10, R11, R12,
+                                            TY, R20, R21, R22, TZ, 0, 0, 0, 1});
   return M;
 }
-

@@ -10,8 +10,8 @@ AprilTags::TagDetector tag_detector(AprilTags::tagCodes36h11);
 
 int main(int argc, char** argv) {
   cv::VideoCapture cap(0);  // open the default camera
-  cap.set(CV_CAP_PROP_FRAME_WIDTH, 320);
-  cap.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
+  // cap.set(CV_CAP_PROP_FRAME_WIDTH, 320);
+  // cap.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
   if (!cap.isOpened())  // check if we succeeded
     return -1;
 

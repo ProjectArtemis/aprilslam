@@ -18,7 +18,7 @@ class Gaussian {
   static std::vector<float> makeGaussianFilter(float sigma, int n);
 
   //! Convolve the input 'a' (which begins at offset aoff and is alen elements
-  //in length) with the filter 'f'.
+  // in length) with the filter 'f'.
   /*! The result is deposited in 'r' at offset 'roff'. f.size() should be odd.
    *  The output is shifted by -f.size()/2, so that there is no net time delay.
    *  @param a input vector of pixels
@@ -29,8 +29,7 @@ class Gaussian {
    *  @param roff
    */
   static void convolveSymmetricCentered(const std::vector<float>& a,
-                                        unsigned int aoff,
-                                        unsigned int alen,
+                                        unsigned int aoff, unsigned int alen,
                                         const std::vector<float>& f,
                                         std::vector<float>& r,
                                         unsigned int roff);

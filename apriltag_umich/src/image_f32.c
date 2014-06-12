@@ -21,13 +21,12 @@
 #include <stdlib.h>
 #include "image_f32.h"
 
-image_f32_t *image_f32_create(int width, int height)
-{
-  image_f32_t *fim = (image_f32_t*) calloc(1, sizeof(image_f32_t));
+image_f32_t *image_f32_create(int width, int height) {
+  image_f32_t *fim = (image_f32_t *)calloc(1, sizeof(image_f32_t));
 
   fim->width = width;
   fim->height = height;
-  fim->stride = width; // XXX do better alignment
+  fim->stride = width;  // XXX do better alignment
 
   fim->buf = calloc(fim->height * fim->stride, sizeof(float));
 
@@ -35,8 +34,7 @@ image_f32_t *image_f32_create(int width, int height)
 }
 
 // scales by 1/255u
-image_f32_t *image_f32_create_from_u8(image_u8_t *im)
-{
+image_f32_t *image_f32_create_from_u8(image_u8_t *im) {
   image_f32_t *fim = image_f32_create(im->width, im->height);
 
   for (int y = 0; y < fim->height; y++)
@@ -46,8 +44,7 @@ image_f32_t *image_f32_create_from_u8(image_u8_t *im)
   return fim;
 }
 
-void image_f32_destroy(image_f32_t *im)
-{
+void image_f32_destroy(image_f32_t *im) {
   free(im->buf);
   free(im);
 }

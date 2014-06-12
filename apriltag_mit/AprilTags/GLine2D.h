@@ -27,18 +27,18 @@ class GLine2D {
    *  @param dy A change in Y corresponding to dx
    *  @param p A point that the line passes through
    */
-  GLine2D(float dX, float dY, const std::pair<float, float>& pt);
+  GLine2D(float dX, float dY, const std::pair<float, float> &pt);
 
   //! Create a new line through two points.
   /*  @param p1 the first point
    *  @param p2 the second point
    */
-  GLine2D(const std::pair<float, float>& p1, const std::pair<float, float>& p2);
+  GLine2D(const std::pair<float, float> &p1, const std::pair<float, float> &p2);
 
   //! Get the coordinate of a point (on this line), with zero corresponding to
-  //the point
+  // the point
   //! on the that is perpendicular toa line passing through the origin and the
-  //line.
+  // line.
   /*  This allows easy computation if one point is between two other points on
    * the line:
    *  compute the line coordinate of all three points and test if a<=b<=c. This
@@ -46,16 +46,16 @@ class GLine2D {
    *  implemented by computing the dot product of the vector 'p' with the
    *  line's direct unit vector.
    */
-  float getLineCoordinate(const std::pair<float, float>& p);
+  float getLineCoordinate(const std::pair<float, float> &p);
 
   //! The inverse of getLineCoordinate.
   std::pair<float, float> getPointOfCoordinate(float coord);
 
   //!Compute the point where two lines intersect, or (-1,0) if the lines are
-  //parallel.
-  std::pair<float, float> intersectionWith(const GLine2D& line) const;
+  // parallel.
+  std::pair<float, float> intersectionWith(const GLine2D &line) const;
 
-  static GLine2D lsqFitXYW(const std::vector<XYWeight>& xyweights);
+  static GLine2D lsqFitXYW(const std::vector<XYWeight> &xyweights);
 
   inline float getDx() const { return dx; }
   inline float getDy() const { return dy; }
@@ -69,8 +69,8 @@ class GLine2D {
  private:
   float dx, dy;
   std::pair<float, float> p;  //!< A point the line passes through; when
-                              //normalized, it is the point closest to the
-                              //origin (hence perpendicular to the line)
+  // normalized, it is the point closest to the
+  // origin (hence perpendicular to the line)
   bool didNormalizeSlope;
   bool didNormalizeP;
 };

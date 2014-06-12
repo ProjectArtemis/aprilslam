@@ -12,11 +12,11 @@ class Segment {
   Segment();
 
   static int const minimumSegmentSize = 4;  //!< Minimum number of pixels in a
-                                            //segment before we'll fit a line to
-                                            //it.
-  static float const minimumLineLength;     //!< In pixels. Calculated based on
-                                         //minimum plausible decoding size for
-                                         //Tag9 family.
+  // segment before we'll fit a line to
+  // it.
+  static float const minimumLineLength;  //!< In pixels. Calculated based on
+  // minimum plausible decoding size for
+  // Tag9 family.
 
   float getX0() const { return x0; }
   void setX0(float newValue) { x0 = newValue; }

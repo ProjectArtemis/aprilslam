@@ -28,25 +28,27 @@
 
 typedef struct line_fit line_fit_t;
 struct line_fit {
-  LINE_FIT_TYPE mXX, mYY, mXY, mX, mY; // 1st and 2nd moments
-  LINE_FIT_TYPE n; // total weight of points
-  uint16_t x0, x1, y0, y1; // bounding box
+  LINE_FIT_TYPE mXX, mYY, mXY, mX, mY;  // 1st and 2nd moments
+  LINE_FIT_TYPE n;                      // total weight of points
+  uint16_t x0, x1, y0, y1;              // bounding box
 };
 
 static inline void line_fit_init(line_fit_t *lf) {
   memset(lf, 0, sizeof(line_fit_t));
-  lf->x0 =  65535;
-  lf->y0 =  65535;
+  lf->x0 = 65535;
+  lf->y0 = 65535;
 
   // since we only use pixel values, 0 is small enough for x1, y1.
 }
 
-static inline void line_fit_init_nozero_update(line_fit_t *lf, LINE_FIT_TYPE x, LINE_FIT_TYPE y, LINE_FIT_TYPE w) {
-  lf->mX = w*x;
-  lf->mY = w*y;
-  lf->mXX = w*x*x;
-  lf->mXY = w*x*y;
-  lf->mYY = w*y*y;
+static inline void line_fit_init_nozero_update(line_fit_t *lf, LINE_FIT_TYPE x,
+                                               LINE_FIT_TYPE y,
+                                               LINE_FIT_TYPE w) {
+  lf->mX = w * x;
+  lf->mY = w * y;
+  lf->mXX = w * x * x;
+  lf->mXY = w * x * y;
+  lf->mYY = w * y * y;
 
   lf->n = w;
 
@@ -56,12 +58,13 @@ static inline void line_fit_init_nozero_update(line_fit_t *lf, LINE_FIT_TYPE x, 
   lf->y1 = y;
 }
 
-static inline void line_fit_init_nozero_update_w1(line_fit_t *lf, uint32_t x, uint32_t y) {
+static inline void line_fit_init_nozero_update_w1(line_fit_t *lf, uint32_t x,
+                                                  uint32_t y) {
   lf->mX += x;
   lf->mY += y;
-  lf->mXX += x*x;
-  lf->mXY += x*y;
-  lf->mYY += y*y;
+  lf->mXX += x * x;
+  lf->mXY += x * y;
+  lf->mYY += y * y;
 
   lf->n++;
 
@@ -71,7 +74,8 @@ static inline void line_fit_init_nozero_update_w1(line_fit_t *lf, uint32_t x, ui
   lf->y1 = y;
 }
 
-// make this line fit object include all the data that was included in the other one.
+// make this line fit object include all the data that was included in the other
+// one.
 static inline void line_fit_combine(line_fit_t *lf, line_fit_t *other) {
   lf->mX += other->mX;
   lf->mY += other->mY;
@@ -87,12 +91,13 @@ static inline void line_fit_combine(line_fit_t *lf, line_fit_t *other) {
   lf->y1 = imax(other->y1, lf->y1);
 }
 
-static inline void line_fit_update(line_fit_t *lf, uint32_t x, uint32_t y, uint32_t w) {
-  lf->mX += w*x;
-  lf->mY += w*y;
-  lf->mXX += w*x*x;
-  lf->mXY += w*x*y;
-  lf->mYY += w*y*y;
+static inline void line_fit_update(line_fit_t *lf, uint32_t x, uint32_t y,
+                                   uint32_t w) {
+  lf->mX += w * x;
+  lf->mY += w * y;
+  lf->mXX += w * x * x;
+  lf->mXY += w * x * y;
+  lf->mYY += w * y * y;
 
   lf->n += w;
 
@@ -105,9 +110,9 @@ static inline void line_fit_update(line_fit_t *lf, uint32_t x, uint32_t y, uint3
 static inline void line_fit_update_w1(line_fit_t *lf, uint32_t x, uint32_t y) {
   lf->mX += x;
   lf->mY += y;
-  lf->mXX += x*x;
-  lf->mXY += x*y;
-  lf->mYY += y*y;
+  lf->mXX += x * x;
+  lf->mXY += x * y;
+  lf->mYY += y * y;
 
   lf->n += 1;
 
@@ -119,13 +124,13 @@ static inline void line_fit_update_w1(line_fit_t *lf, uint32_t x, uint32_t y) {
 
 // writes a point that lies on the line in p0, the unit vector in u.
 static inline void line_fit_compute(line_fit_t *lf, float *p0, float *u) {
-  float Ex = (float) (lf->mX / lf->n);
-  float Ey = (float) (lf->mY / lf->n);
-  float Cxx = (float) (lf->mXX / lf->n - Ex*Ex);
-  float Cxy = (float) (lf->mXY / lf->n - Ex*Ey);
-  float Cyy = (float) (lf->mYY / lf->n - Ey*Ey);
+  float Ex = (float)(lf->mX / lf->n);
+  float Ey = (float)(lf->mY / lf->n);
+  float Cxx = (float)(lf->mXX / lf->n - Ex * Ex);
+  float Cxy = (float)(lf->mXY / lf->n - Ex * Ey);
+  float Cyy = (float)(lf->mYY / lf->n - Ey * Ey);
 
-  float phi = 0.5f*atan2(-2*Cxy, (Cyy - Cxx));
+  float phi = 0.5f * atan2(-2 * Cxy, (Cyy - Cxx));
 
   // the direction of the line is -sin(phi), cos(phi), and it goes
   // through (Ex, Ey)

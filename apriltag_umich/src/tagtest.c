@@ -32,8 +32,7 @@
 //
 // tagtest [options] input.pnm
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   april_tag_family_t *tf = tag36h11_create();
 
   april_tag_detector_t *td = april_tag_detector_create(tf);
@@ -41,17 +40,17 @@ int main(int argc, char *argv[])
 
   int maxiters = 1;
 
-  zarray_t *inputs = zarray_create(sizeof(char*));
+  zarray_t *inputs = zarray_create(sizeof(char *));
   int waitsec = 0;
 
-  for (int i = 1; i < argc; i++)
-  {
+  for (int i = 1; i < argc; i++) {
     if (!strcmp(argv[i], "-d"))
       td->debug = 1;
     else if (!strcmp(argv[i], "-t"))
       td->nthreads = atoi(argv[++i]);
     else if (!strcmp(argv[i], "-f"))
-      td->seg_decimate = (i + 1 < argc && isdigit(argv[i + 1][0])) ? atoi(argv[++i]) : 2;
+      td->seg_decimate =
+          (i + 1 < argc && isdigit(argv[i + 1][0])) ? atoi(argv[++i]) : 2;
     else if (!strcmp(argv[i], "-i"))
       maxiters = atoi(argv[++i]);
     else if (!strcmp(argv[i], "-r"))
@@ -71,45 +70,41 @@ int main(int argc, char *argv[])
       zarray_add(inputs, &argv[i]);
   }
 
-  for (int iter = 0; iter < maxiters; iter++)
-  {
+  for (int iter = 0; iter < maxiters; iter++) {
 
-    if (maxiters > 1)
-      printf("iter %d / %d\n", iter + 1, maxiters);
+    if (maxiters > 1) printf("iter %d / %d\n", iter + 1, maxiters);
 
-    for (int input = 0; input < zarray_size(inputs); input++)
-    {
+    for (int input = 0; input < zarray_size(inputs); input++) {
 
       char *path;
       zarray_get(inputs, input, &path);
       printf("loading %s\n", path);
       image_u8_t *im = image_u8_create_from_pnm(path);
-      if (im == NULL)
-      {
+      if (im == NULL) {
         printf("couldn't find %s\n", path);
         continue;
       }
 
       zarray_t *detections = april_tag_detector_detect(td, im);
 
-      for (int i = 0; i < zarray_size(detections); i++)
-      {
+      for (int i = 0; i < zarray_size(detections); i++) {
         april_tag_detection_t *det;
         zarray_get(detections, i, &det);
 
-        printf("detection %3d: id %4d, hamming %d, goodness %f\n", i, det->id, det->hamming, det->goodness);
+        printf("detection %3d: id %4d, hamming %d, goodness %f\n", i, det->id,
+               det->hamming, det->goodness);
         april_tag_detection_destroy(det);
       }
 
       zarray_destroy(detections);
 
       timeprofile_display(td->tp);
-      printf("nedges: %d, nsegments: %d, nquads: %d\n", td->nedges, td->nsegments, td->nquads);
+      printf("nedges: %d, nsegments: %d, nquads: %d\n", td->nedges,
+             td->nsegments, td->nquads);
 
       image_u8_destroy(im);
 
-      if (zarray_size(inputs) > 1 || iter > 0)
-        sleep(waitsec);
+      if (zarray_size(inputs) > 1 || iter > 0) sleep(waitsec);
     }
   }
 

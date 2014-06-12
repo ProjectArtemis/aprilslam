@@ -29,7 +29,7 @@ typedef struct {
   double *data;
 } matd_t;
 
-#define MAT_EL(m, row,col) (m)->data[((row)*(m)->ncols + (col))]
+#define MAT_EL(m, row, col) (m)->data[((row) * (m)->ncols + (col))]
 
 typedef struct {
   // was the input matrix singular? When a near-zero pivot is found,
@@ -37,9 +37,9 @@ typedef struct {
   // can be found. This flag is set to indicate that this has happened.
   int singular;
 
-  int *piv; // permutation indices
+  int *piv;  // permutation indices
   int pivsign;
-  matd_t *lu; // combined L and U matrices, permuted.
+  matd_t *lu;  // combined L and U matrices, permuted.
 } matd_lu_t;
 
 //////////////////////////////////
@@ -56,7 +56,6 @@ matd_t *matd_create_scalar(double v);
 matd_t *matd_copy(const matd_t *m);
 matd_t *matd_identity(int dim);
 void matd_destroy(matd_t *m);
-
 
 //////////////////////////////////
 // Basic Operations
@@ -95,7 +94,5 @@ double matd_lu_det(const matd_lu_t *lu);
 matd_t *matd_lu_l(const matd_lu_t *lu);
 matd_t *matd_lu_u(const matd_lu_t *lu);
 matd_t *matd_lu_solve(const matd_lu_t *mlu, const matd_t *b);
-
-
 
 #endif

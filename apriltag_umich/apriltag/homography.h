@@ -24,13 +24,17 @@
 // and y concatenated. We will compute a homography such that y = Hx
 matd_t *homography_compute(zarray_t *correspondences);
 
-void homography_project(const matd_t *H, double x, double y, double *ox, double *oy);
+void homography_project(const matd_t *H, double x, double y, double *ox,
+                        double *oy);
 
-matd_t *homography_to_pose(const matd_t *H, double fx, double fy, double cx, double cy);
-matd_t *homography_to_model_view(const matd_t *H, double F, double G, double A, double B, double C, double D);
+matd_t *homography_to_pose(const matd_t *H, double fx, double fy, double cx,
+                           double cy);
+matd_t *homography_to_model_view(const matd_t *H, double F, double G, double A,
+                                 double B, double C, double D);
 
 /*
-   static inline void homography_project01(const matd_t *H, double x, double y, double *ox, double *oy)
+   static inline void homography_project01(const matd_t *H, double x, double y,
+   double *ox, double *oy)
    {
    homography_project(H, 2*x - 1, 2*y - 1, ox, oy);
    }

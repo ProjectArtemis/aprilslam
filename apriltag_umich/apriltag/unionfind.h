@@ -42,10 +42,10 @@ struct ufrec {
 unionfind_t *unionfind_create(uint32_t maxid);
 void unionfind_destroy(unionfind_t *uf);
 
-static inline uint32_t unionfind_get_representative(unionfind_t *uf, uint32_t id) {
+static inline uint32_t unionfind_get_representative(unionfind_t *uf,
+                                                    uint32_t id) {
   // base case: a node is its own parent
-  if (uf->data[id].parent == 0)
-    return id;
+  if (uf->data[id].parent == 0) return id;
 
   // otherwise, recurse
   uint32_t root = unionfind_get_representative(uf, uf->data[id].parent);
@@ -61,12 +61,12 @@ static inline uint32_t unionfind_get_set_size(unionfind_t *uf, uint32_t id) {
   return uf->data[repid].size + 1;
 }
 
-static inline uint32_t unionfind_connect(unionfind_t *uf, uint32_t aid, uint32_t bid) {
+static inline uint32_t unionfind_connect(unionfind_t *uf, uint32_t aid,
+                                         uint32_t bid) {
   uint32_t aroot = unionfind_get_representative(uf, aid);
   uint32_t broot = unionfind_get_representative(uf, bid);
 
-  if (aroot == broot)
-    return aroot;
+  if (aroot == broot) return aroot;
 
   uint32_t asize = uf->data[aroot].size;
   uint32_t bsize = uf->data[broot].size;

@@ -22,7 +22,7 @@ class Edge {
   static float const
       minMag;  //!< minimum intensity gradient for an edge to be recognized
   static float const maxEdgeCost;  //!< 30 degrees = maximum acceptable
-                                   //difference in local orientations
+                                   // difference in local orientations
   static int const WEIGHT_SCALE;   // was 10000
   static float const thetaThresh;  //!< theta threshold for merging edges
   static float const magThresh;    //!< magnitude threshold for merging edges
@@ -52,7 +52,7 @@ class Edge {
                         size_t &nEdges);
 
   //! Process edges in order of increasing cost, merging clusters if we can do
-  //so without exceeding the thetaThresh.
+  // so without exceeding the thetaThresh.
   static void mergeEdges(std::vector<Edge> &edges, UnionFindSimple &uf,
                          float tmin[], float tmax[], float mmin[],
                          float mmax[]);

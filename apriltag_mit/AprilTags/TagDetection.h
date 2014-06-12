@@ -34,7 +34,7 @@ struct TagDetection {
   int hammingDistance;
 
   //! How many 90 degree rotations were required to align the code (internal use
-  //only)
+  // only)
   int rotation;
 
   /////////////// Fields below are filled in by TagDetector ///////////////
@@ -53,7 +53,7 @@ struct TagDetection {
   float observedPerimeter;
 
   //! A 3x3 homography that computes pixel coordinates from tag-relative
-  //coordinates.
+  // coordinates.
   /*  Both the input and output coordinates are 2D homogeneous vectors, with y =
    * Hx.
    *  'y' are pixel coordinates, 'x' are tag-relative coordinates. Tag
@@ -89,7 +89,7 @@ struct TagDetection {
                                        double px, double py) const;
 
   //! Recover rotation matrix and translation vector of April tag relative to
-  //camera.
+  // camera.
   // Result is in object frame (x forward, y left, z up)
   void getRelativeTranslationRotation(double tag_size, double fx, double fy,
                                       double px, double py,
@@ -97,7 +97,7 @@ struct TagDetection {
                                       Eigen::Matrix3d& rot) const;
 
   //! Draw the detection within the supplied image, including boarders and tag
-  //ID.
+  // ID.
   void draw(cv::Mat& image) const;
 };
 

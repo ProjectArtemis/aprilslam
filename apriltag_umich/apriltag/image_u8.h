@@ -34,12 +34,14 @@ struct image_u8 {
 
 image_u8_t *image_u8_create(int width, int height);
 image_u8_t *image_u8_create_from_gray(int width, int height, uint8_t *gray);
-image_u8_t *image_u8_create_from_rgb3(int width, int height, uint8_t *rgb, int stride);
+image_u8_t *image_u8_create_from_rgb3(int width, int height, uint8_t *rgb,
+                                      int stride);
 image_u8_t *image_u8_create_from_f32(image_f32_t *fim);
 image_u8_t *image_u8_create_from_pnm(const char *path);
 
 image_u8_t *image_u8_copy(const image_u8_t *src);
-void image_u8_draw_line(image_u8_t *im, float x0, float y0, float x1, float y1, int v, int width);
+void image_u8_draw_line(image_u8_t *im, float x0, float y0, float x1, float y1,
+                        int v, int width);
 void image_u8_draw_circle(image_u8_t *im, float x0, float y0, float r, int v);
 
 void image_u8_clear(image_u8_t *im);

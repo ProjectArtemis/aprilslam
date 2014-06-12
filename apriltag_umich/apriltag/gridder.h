@@ -47,22 +47,22 @@ struct gridder_iterator {
   int pos;
 };
 
-static inline gridder_t *gridder_create(int x0, int y0, int x1, int y1, int cell_size) {
+static inline gridder_t *gridder_create(int x0, int y0, int x1, int y1,
+                                        int cell_size) {
   gridder_t *g = calloc(1, sizeof(gridder_t));
   g->x0 = x0;
   g->y0 = y0;
   g->cell_size = cell_size;
 
-  g->width = (int) (x1 - x0 + cell_size - 1) / cell_size;
-  g->height = (int) (y1 - y0 + cell_size - 1) / cell_size;
+  g->width = (int)(x1 - x0 + cell_size - 1) / cell_size;
+  g->height = (int)(y1 - y0 + cell_size - 1) / cell_size;
 
   g->cells = calloc(g->width * g->height, sizeof(struct gridder_cell));
   return g;
 }
 
 static inline void gridder_destroy(gridder_t *g) {
-  for (int idx = 0; idx < g->width * g->height; idx++)
-    free(g->cells[idx].p);
+  for (int idx = 0; idx < g->width * g->height; idx++) free(g->cells[idx].p);
 
   free(g->cells);
   free(g);
@@ -70,23 +70,20 @@ static inline void gridder_destroy(gridder_t *g) {
 
 static inline void gridder_add(gridder_t *g, int x, int y, void *p) {
   int ix = (x - g->x0) / g->cell_size;
-  if (ix < 0 || ix >= g->width)
-    return;
+  if (ix < 0 || ix >= g->width) return;
 
   int iy = (y - g->y0) / g->cell_size;
-  if (iy < 0 || iy >= g->height)
-    return;
+  if (iy < 0 || iy >= g->height) return;
 
-  int idx = iy*g->width + ix;
+  int idx = iy * g->width + ix;
 
   struct gridder_cell *cell = &g->cells[idx];
 
   if (cell->size == cell->alloc) {
     int newalloc = cell->alloc * 2;
-    if (newalloc < GRIDDER_MIN_ALLOC)
-      newalloc = GRIDDER_MIN_ALLOC;
+    if (newalloc < GRIDDER_MIN_ALLOC) newalloc = GRIDDER_MIN_ALLOC;
 
-    cell->p = realloc(cell->p, sizeof(void*) * newalloc);
+    cell->p = realloc(cell->p, sizeof(void *) * newalloc);
     cell->alloc = newalloc;
   }
 
@@ -99,12 +96,13 @@ static inline int clamp(int x, int x0, int x1) {
   return x;
 }
 
-static inline void gridder_iterator_init(gridder_t *g, gridder_iterator_t *gi, int cx, int cy, int r) {
+static inline void gridder_iterator_init(gridder_t *g, gridder_iterator_t *gi,
+                                         int cx, int cy, int r) {
   gi->g = g;
-  gi->ix0 = clamp((cx - r - g->x0) / g->cell_size,  0, g->width - 1);
-  gi->ix1 = clamp((cx + r - g->x0) / g->cell_size,  0, g->width - 1);
-  gi->iy0 = clamp((cy - r - g->y0) / g->cell_size,  0, g->height - 1);
-  gi->iy1 = clamp((cy + r - g->y0) / g->cell_size,  0, g->height - 1);
+  gi->ix0 = clamp((cx - r - g->x0) / g->cell_size, 0, g->width - 1);
+  gi->ix1 = clamp((cx + r - g->x0) / g->cell_size, 0, g->width - 1);
+  gi->iy0 = clamp((cy - r - g->y0) / g->cell_size, 0, g->height - 1);
+  gi->iy1 = clamp((cy + r - g->y0) / g->cell_size, 0, g->height - 1);
 
   gi->ix = gi->ix0;
   gi->iy = gi->iy0;
@@ -116,10 +114,9 @@ static inline void *gridder_iterator_next(gridder_iterator_t *gi) {
   gridder_t *g = gi->g;
 
   while (1) {
-    int idx = gi->iy*g->width + gi->ix;
+    int idx = gi->iy * g->width + gi->ix;
 
-    if (gi->pos < g->cells[idx].size)
-      return g->cells[idx].p[gi->pos++];
+    if (gi->pos < g->cells[idx].size) return g->cells[idx].p[gi->pos++];
 
     if (gi->ix < gi->ix1) {
       gi->ix++;

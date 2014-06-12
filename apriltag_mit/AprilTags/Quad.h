@@ -20,8 +20,8 @@ using std::max;
 class Quad {
  public:
   static const int minimumEdgeLength = 6;  //!< Minimum size of a tag (in
-                                           //pixels) as measured along edges and
-                                           //diagonals
+  // pixels) as measured along edges and
+  // diagonals
   static float const
       maxQuadAspectRatio;  //!< Early pruning of quads with insane ratios.
 
@@ -36,11 +36,11 @@ class Quad {
   std::pair<float, float> interpolate(float x, float y);
 
   //! Same as interpolate, except that the coordinates are interpreted between 0
-  //and 1, instead of -1 and 1.
+  // and 1, instead of -1 and 1.
   std::pair<float, float> interpolate01(float x, float y);
 
   //! Points for the quad (in pixel coordinates), in counter clockwise order.
-  //These points are the intersections of segments.
+  // These points are the intersections of segments.
   std::vector<std::pair<float, float> > quadPoints;
 
   //! Segments composing this quad
@@ -54,7 +54,7 @@ class Quad {
   float observedPerimeter;
 
   //! Given that the whole quad spans from (0,0) to (1,1) in "quad space",
-  //compute the pixel coordinates for a given point within that quad.
+  // compute the pixel coordinates for a given point within that quad.
   /*!  Note that for most of the Quad's existence, we will not know the correct
    * orientation of the tag. */
   Homography33 homography;

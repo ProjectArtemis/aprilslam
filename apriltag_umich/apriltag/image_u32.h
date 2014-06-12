@@ -42,8 +42,10 @@ image_u8_t **image_u32_split_channels(image_u32_t *src);
 
 void image_u32_clear(image_u32_t *im);
 void image_u32_destroy(image_u32_t *im);
-void image_u32_draw_line(image_u32_t *im, float x0, float y0, float x1, float y1, uint32_t v, int width);
-void image_u32_draw_circle(image_u32_t *im, float x0, float y0, float r, uint32_t v);
+void image_u32_draw_line(image_u32_t *im, float x0, float y0, float x1,
+                         float y1, uint32_t v, int width);
+void image_u32_draw_circle(image_u32_t *im, float x0, float y0, float r,
+                           uint32_t v);
 
 int image_u32_write_pnm(image_u32_t *im, const char *path);
 

@@ -213,7 +213,8 @@ void april_tag_detector_destroy(april_tag_detector_t *td);
 
 // Detect tags from an image and return an array of
 // april_tag_detection_t*.
-zarray_t *april_tag_detector_detect(april_tag_detector_t *td, image_u8_t *im_orig);
+zarray_t *april_tag_detector_detect(april_tag_detector_t *td,
+                                    image_u8_t *im_orig);
 
 // Call this method on each of the tags returned by april_tag_detector_detect
 void april_tag_detection_destroy(april_tag_detection_t *det);
