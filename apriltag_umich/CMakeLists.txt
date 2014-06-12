@@ -24,10 +24,10 @@ set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_C_FLAGS "-std=gnu99 -fPIC")
 file(GLOB C_FILES ${PROJECT_SOURCE_DIR}/src/*.c)
 list(REMOVE_ITEM C_FILES ${PROJECT_SOURCE_DIR}/src/tagtest.c)
-add_library(apriltag ${C_FILES})
-target_link_libraries (apriltag ${CMAKE_THREAD_LIBS_INIT})
+add_library(${PROJECT_NAME} SHARED ${C_FILES})
+target_link_libraries (${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 
 #apriltag umich
 add_executable(test_apriltag_umich src/test_apriltag_umich.cpp)
 target_link_libraries(test_apriltag_umich ${OpenCV_LIBS})
-target_link_libraries(test_apriltag_umich apriltag)
+target_link_libraries(test_apriltag_umich ${PROJECT_NAME})
