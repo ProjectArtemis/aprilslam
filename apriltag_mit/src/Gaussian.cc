@@ -9,8 +9,7 @@ std::vector<float> Gaussian::makeGaussianFilter(float sigma, int n) {
   std::vector<float> f(n, 0.0f);
 
   if (sigma == 0) {
-    for (int i = 0; i < n; i++)
-      f[i] = 0;
+    for (int i = 0; i < n; i++) f[i] = 0;
     f[n / 2] = 1;
     return f;
   }
@@ -24,16 +23,19 @@ std::vector<float> Gaussian::makeGaussianFilter(float sigma, int n) {
   }
 
   // normalize the gaussian
-  for (int i = 0; i < n; i++)
-    f[i] /= sum;
+  for (int i = 0; i < n; i++) f[i] /= sum;
 
   return f;
 }
 
-void Gaussian::convolveSymmetricCentered(const std::vector<float> &a, unsigned int aoff, unsigned int alen,
-    const std::vector<float> &f, std::vector<float> &r, unsigned int roff) {
+void Gaussian::convolveSymmetricCentered(const std::vector<float> &a,
+                                         unsigned int aoff, unsigned int alen,
+                                         const std::vector<float> &f,
+                                         std::vector<float> &r,
+                                         unsigned int roff) {
   if ((f.size() & 1) == 0 && !warned) {
-    std::cout << "convolveSymmetricCentered Warning: filter is not odd length\n";
+    std::cout
+        << "convolveSymmetricCentered Warning: filter is not odd length\n";
     warned = true;
   }
 
@@ -68,5 +70,4 @@ void Gaussian::convolveSymmetricCentered(const std::vector<float> &a, unsigned i
   }
 }
 
-} // namespace
-
+}  // namespace

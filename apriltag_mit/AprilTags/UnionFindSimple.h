@@ -13,7 +13,7 @@ class UnionFindSimple {
     int size;
   };
 
-public:
+ public:
   explicit UnionFindSimple(int maxId) : data(maxId) {
     init();
   };
@@ -30,12 +30,12 @@ public:
 
   void printDataVector() const;
 
-private:
+ private:
   void init();
 
   std::vector<Data> data;
 };
 
-} // namespace
+}  // namespace
 
 #endif

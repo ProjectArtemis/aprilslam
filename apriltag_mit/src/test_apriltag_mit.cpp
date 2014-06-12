@@ -9,28 +9,27 @@
 AprilTags::TagDetector tag_detector(AprilTags::tagCodes36h11);
 
 int main(int argc, char** argv) {
-  cv::VideoCapture cap(0); // open the default camera
+  cv::VideoCapture cap(0);  // open the default camera
   cap.set(CV_CAP_PROP_FRAME_WIDTH, 320);
   cap.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
-  if(!cap.isOpened())  // check if we succeeded
+  if (!cap.isOpened())  // check if we succeeded
     return -1;
 
   cv::namedWindow("camera", 1);
-  for(;;) {
+  for (;;) {
     cv::Mat image;
     cv::Mat image_gray;
-    cap.read(image); // get a new frame from camera
-    cv::cvtColor(image, image_gray, CV_BGR2GRAY); // convert rgb to gray
+    cap.read(image);  // get a new frame from camera
+    cv::cvtColor(image, image_gray, CV_BGR2GRAY);  // convert rgb to gray
 
     // detect April tags
-    vector<AprilTags::TagDetection> detections = tag_detector.extractTags(image_gray);
+    vector<AprilTags::TagDetection> detections =
+        tag_detector.extractTags(image_gray);
 
-    for (int i = 0; i < detections.size(); ++i)
-      detections[i].draw(image);
-    cv::imshow("camera", image); // display frame
+    for (int i = 0; i < detections.size(); ++i) detections[i].draw(image);
+    cv::imshow("camera", image);  // display frame
 
-    if(cv::waitKey(10) >= 0)
-      break;
+    if (cv::waitKey(10) >= 0) break;
   }
 
   return 0;

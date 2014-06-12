@@ -8,6 +8,4 @@ std::ostream &operator<<(std::ostream &os, const std::pair<float, float> &pt) {
   return os;
 }
 
-} // namespace
-
-
+}  // namespace

@@ -22,21 +22,22 @@ TagFamily *tag36h11 = new TagFamily(tagCodes36h11);
 
 */
 
-
 namespace AprilTags {
 
 TagFamily::TagFamily(const TagCodes &tagCodes)
-  : blackBorder(1), bits(tagCodes.bits), dimension((int)std::sqrt((float)bits)),
-    minimumHammingDistance(tagCodes.minHammingDistance),
-    errorRecoveryBits(1), codes() {
+    : blackBorder(1),
+      bits(tagCodes.bits),
+      dimension((int)std::sqrt((float)bits)),
+      minimumHammingDistance(tagCodes.minHammingDistance),
+      errorRecoveryBits(1),
+      codes() {
   if (bits != dimension * dimension)
-    cerr << "Error: TagFamily constructor called with bits=" << bits << "; must be a square number!" << endl;
+    cerr << "Error: TagFamily constructor called with bits=" << bits
+         << "; must be a square number!" << endl;
   codes = tagCodes.codes;
 }
 
-void TagFamily::setErrorRecoveryBits(int b) {
-  errorRecoveryBits = b;
-}
+void TagFamily::setErrorRecoveryBits(int b) { errorRecoveryBits = b; }
 
 void TagFamily::setErrorRecoveryFraction(float v) {
   errorRecoveryBits = (int)(((int)(minimumHammingDistance - 1) / 2) * v);
@@ -51,8 +52,7 @@ unsigned long long TagFamily::rotate90(unsigned long long w, int d) {
       int b = r + d * c;
       wr = wr << 1;
 
-      if ((w & (oneLongLong << b)) != 0)
-        wr |= 1;
+      if ((w & (oneLongLong << b)) != 0) wr |= 1;
     }
   }
   return wr;
@@ -81,9 +81,9 @@ int TagFamily::popCount(unsigned long long w) {
 }
 
 void TagFamily::decode(TagDetection &det, unsigned long long rCode) const {
-  int  bestId = -1;
-  int  bestHamming = INT_MAX;
-  int  bestRotation = 0;
+  int bestId = -1;
+  int bestHamming = INT_MAX;
+  int bestRotation = 0;
   unsigned long long bestCode = 0;
 
   unsigned long long rCodes[4];
@@ -119,10 +119,9 @@ void TagFamily::printHammingDistances() const {
     unsigned long long r2 = rotate90(r1, dimension);
     unsigned long long r3 = rotate90(r2, dimension);
     for (unsigned int j = i + 1; j < codes.size(); j++) {
-      int d = min(min(hammingDistance(r0, codes[j]),
-                      hammingDistance(r1, codes[j])),
-                  min(hammingDistance(r2, codes[j]),
-                      hammingDistance(r3, codes[j])));
+      int d = min(
+          min(hammingDistance(r0, codes[j]), hammingDistance(r1, codes[j])),
+          min(hammingDistance(r2, codes[j]), hammingDistance(r3, codes[j])));
       hammings[d]++;
     }
   }
@@ -135,5 +134,4 @@ unsigned char TagFamily::popCountTable[TagFamily::popCountTableSize];
 
 TagFamily::TableInitializer TagFamily::initializer;
 
-} // namespace
-
+}  // namespace

@@ -44,8 +44,10 @@ float GrayModel::interpolate(float x, float y) {
 }
 
 void GrayModel::compute() {
-  // we really only need 4 linearly independent observations to fit our answer, but we'll be very
-  // sensitive to noise if we don't have an over-determined system. Thus, require at least 6
+  // we really only need 4 linearly independent observations to fit our answer,
+  // but we'll be very
+  // sensitive to noise if we don't have an over-determined system. Thus,
+  // require at least 6
   // observations (or we'll use a constant model below).
 
   dirty = false;
@@ -53,8 +55,7 @@ void GrayModel::compute() {
     // make symmetric
     Eigen::Matrix4d Ainv;
     for (int i = 0; i < 4; i++)
-      for (int j = i + 1; j < 4; j++)
-        A(j, i) = A(i, j);
+      for (int j = i + 1; j < 4; j++) A(j, i) = A(i, j);
 
     //    try {
     //      Ainv = A.inverse();
@@ -65,18 +66,19 @@ void GrayModel::compute() {
       v = Ainv * b;
       return;
     }
-    std::cerr << "AprilTags::GrayModel::compute() has underflow in matrix inverse\n";
+    std::cerr
+        << "AprilTags::GrayModel::compute() has underflow in matrix inverse\n";
     //    }
     //    catch (std::underflow_error&) {
-    //      std::cerr << "AprilTags::GrayModel::compute() has underflow in matrix inverse\n";
+    //      std::cerr << "AprilTags::GrayModel::compute() has underflow in
+    // matrix inverse\n";
     //    }
   }
 
   // If we get here, either nobs < 6 or the matrix inverse generated
   // an underflow, so use a constant model.
-  v.setZero();   // need the cast to avoid operator= ambiguity wrt. const-ness
+  v.setZero();  // need the cast to avoid operator= ambiguity wrt. const-ness
   v[3] = b[3] / nobs;
 }
 
-} // namespace
-
+}  // namespace

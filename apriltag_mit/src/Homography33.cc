@@ -8,7 +8,8 @@
 
 #include "Homography33.h"
 
-Homography33::Homography33(const std::pair<float, float> &opticalCenter) : cxy(opticalCenter), fA(), H(), valid(false) {
+Homography33::Homography33(const std::pair<float, float> &opticalCenter)
+    : cxy(opticalCenter), fA(), H(), valid(false) {
   fA.setZero();
   H.setZero();
 }
@@ -19,14 +20,16 @@ Eigen::Matrix3d &Homography33::getH() {
 }
 
 #ifdef STABLE_H
-void Homography33::setCorrespondences(const std::vector< std::pair<float, float> > &sPts,
-                                      const std::vector< std::pair<float, float> > &dPts) {
+void Homography33::setCorrespondences(
+    const std::vector<std::pair<float, float> > &sPts,
+    const std::vector<std::pair<float, float> > &dPts) {
   valid = false;
   srcPts = sPts;
   dstPts = dPts;
 }
 #else
-void Homography33::addCorrespondence(float worldx, float worldy, float imagex, float imagey) {
+void Homography33::addCorrespondence(float worldx, float worldy, float imagex,
+                                     float imagey) {
   valid = false;
   imagex -= cxy.first;
   imagey -= cxy.second;
@@ -54,7 +57,8 @@ void Homography33::addCorrespondence(float worldx, float worldy, float imagex, f
    * A[3*i+2][5] =  worldxyh[i][2]*imagexy[i][0];
    */
 
-  // only update upper-right. A'A is symmetric, we'll finish the lower left later.
+  // only update upper-right. A'A is symmetric, we'll finish the lower left
+  // later.
   float a03 = -worldx;
   float a04 = -worldy;
   float a05 = -1;
@@ -169,7 +173,8 @@ void Homography33::compute() {
     sPts.push_back(cv::Point2f(srcPts[i].first, srcPts[i].second));
   }
   for (int i = 0; i < 4; i++) {
-    dPts.push_back(cv::Point2f(dstPts[i].first - cxy.first, dstPts[i].second - cxy.second));
+    dPts.push_back(cv::Point2f(dstPts[i].first - cxy.first,
+                               dstPts[i].second - cxy.second));
   }
   cv::Mat homography = cv::findHomography(sPts, dPts);
   for (int c = 0; c < 3; c++) {
@@ -186,10 +191,10 @@ void Homography33::compute() {
 
   // make symmetric
   for (int i = 0; i < 9; i++)
-    for (int j = i + 1; j < 9; j++)
-      fA(j, i) = fA(i, j);
+    for (int j = i + 1; j < 9; j++) fA(j, i) = fA(i, j);
 
-  Eigen::JacobiSVD<Eigen::MatrixXd> svd(fA, Eigen::ComputeFullU | Eigen::ComputeFullV);
+  Eigen::JacobiSVD<Eigen::MatrixXd> svd(
+      fA, Eigen::ComputeFullU | Eigen::ComputeFullV);
   Eigen::MatrixXd eigV = svd.matrixV();
 
   for (int i = 0; i < 3; i++) {
@@ -213,5 +218,3 @@ std::pair<float, float> Homography33::project(float worldx, float worldy) {
   ixy.second = ixy.second / z + cxy.second;
   return ixy;
 }
-
-

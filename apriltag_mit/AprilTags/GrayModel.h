@@ -15,7 +15,7 @@ namespace AprilTags {
  * reading bits.
  */
 class GrayModel {
-public:
+ public:
   GrayModel();
 
   void addObservation(float x, float y, float gray);
@@ -24,15 +24,15 @@ public:
 
   float interpolate(float x, float y);
 
-private:
+ private:
   void compute();
 
-// We're solving Av = b.
-//
-// For each observation, we add a row to A of the form [x y xy 1]
-// and to b of the form gray*[x y xy 1].  v is the vector [c1 c2 c3 c4].
-//
-// The least-squares solution to the system is v = inv(A'A)A'b
+  // We're solving Av = b.
+  //
+  // For each observation, we add a row to A of the form [x y xy 1]
+  // and to b of the form gray*[x y xy 1].  v is the vector [c1 c2 c3 c4].
+  //
+  // The least-squares solution to the system is v = inv(A'A)A'b
 
   Eigen::Matrix4d A;
   Eigen::Vector4d v;
@@ -41,6 +41,6 @@ private:
   bool dirty;  //!< True if we've added an observation and need to recompute v
 };
 
-} // namespace
+}  // namespace
 
 #endif

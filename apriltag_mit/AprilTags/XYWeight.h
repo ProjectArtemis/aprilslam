@@ -9,11 +9,10 @@ struct XYWeight {
   float y;
   float weight;
 
-  XYWeight(float xval, float yval, float weightval) :
-    x(xval), y(yval), weight(weightval) {}
-
+  XYWeight(float xval, float yval, float weightval)
+      : x(xval), y(yval), weight(weightval) {}
 };
 
-} // namespace
+}  // namespace
 
 #endif

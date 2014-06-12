@@ -14,9 +14,9 @@ link_directories(${PROJECT_SOURCE_DIR}/lib)
 
 include_directories(AprilTags .)
 
-find_package(Eigen REQUIRED)
-include_directories(${Eigen_INCLUDE_DIRS})
-message(STATUS "Eigen: " ${Eigen_INCLUDE_DIRS})
+find_package(Eigen3 REQUIRED)
+include_directories(${Eigen3_INCLUDE_DIRS})
+message(STATUS "Eigen3: " ${Eigen3_INCLUDE_DIRS})
 
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
@@ -27,7 +27,7 @@ set(CMAKE_CXX_FLAGS "-fPIC")
 file(GLOB CC_FILES ${PROJECT_SOURCE_DIR}/src/*.cc)
 add_library(apriltags ${CC_FILES})
 target_link_libraries(apriltags ${OpenCV_LIBS})
-target_link_libraries(apriltags ${Eigen_LIBS})
+target_link_libraries(apriltags ${Eigen3_LIBS})
 
 add_executable(test_apriltag_mit src/test_apriltag_mit.cpp)
 target_link_libraries(test_apriltag_mit ${OpenCV_LIBS})
