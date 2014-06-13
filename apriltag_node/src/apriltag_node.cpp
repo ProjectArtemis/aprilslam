@@ -29,9 +29,7 @@ const cv::Scalar colors[] = {cv::Scalar(255, 0, 0, 0), cv::Scalar(0, 255, 0, 0),
 
 class AprilTag {
  public:
-
  private:
-
 };  // class AprilTag
 
 void cam_callback(const sensor_msgs::ImageConstPtr &image,
@@ -88,8 +86,7 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
   cv::waitKey(1);
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
   ros::init(argc, argv, "apriltag_node");
   ros::NodeHandle nh;
   image_transport::ImageTransport it(nh);
