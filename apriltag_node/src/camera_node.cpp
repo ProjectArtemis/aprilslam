@@ -17,13 +17,15 @@ using camera_info_manager::CameraInfoManager;
 using image_transport::CameraPublisher;
 typedef boost::shared_ptr<CameraInfoManager> CameraInfoManagerPtr;
 
-bool CheckCameraInfo(const sensor_msgs::CameraInfo cinfo, const int height,
-                     const int width) {
-  if (cinfo.width != width || cinfo.height != height) {
+bool CheckCameraInfo(const CameraInfoManagerPtr &camera_info_manager,
+                     const int height, const int width) {
+  sensor_msgs::CameraInfoPtr cinfo = sensor_msgs::CameraInfoPtr(
+      new sensor_msgs::CameraInfo(camera_info_manager->getCameraInfo()));
+  if (cinfo->width != width || cinfo->height != height) {
     ROS_WARN("apriltag: Calibration dimension mismatch.");
     return false;
   }
-  if (cinfo.K[0] == 0) {
+  if (!camera_info_manager->isCalibrated()) {
     ROS_WARN("apriltag: Camera not calibrated.");
     return false;
   }
@@ -46,14 +48,16 @@ int main(int argc, char **argv) {
     calibration_url = "";
     ROS_WARN("No calibration file specified.");
   }
+  ROS_INFO("Height: %d", height);
+  ROS_INFO("Width:  %d", width);
+  ROS_INFO("Fps:    %f", fps);
 
   // Initialize publisher
   image_transport::ImageTransport it(nh);
   CameraPublisher camera_pub = it.advertiseCamera("image_raw", 1);
   CameraInfoManagerPtr camera_info_manager = CameraInfoManagerPtr(
       new CameraInfoManager(nh, "webcam", calibration_url));
-  calibrated =
-      CheckCameraInfo(camera_info_manager->getCameraInfo(), height, width);
+  calibrated = CheckCameraInfo(camera_info_manager, height, width);
 
   // Initialize opencv video capture
   cv::VideoCapture cap(0);
