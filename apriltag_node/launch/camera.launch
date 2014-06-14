@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="apriltag_node" type="camera_node" name="camera" output="screen" >
+    </node>
+</launch>
