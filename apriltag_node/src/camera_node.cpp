@@ -34,7 +34,7 @@ bool CheckCameraInfo(const CameraInfoManagerPtr &camera_info_manager,
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "camera_node");
-  ros::NodeHandle nh;
+  ros::NodeHandle nh("~");
 
   // Read settings
   bool calibrated = false;

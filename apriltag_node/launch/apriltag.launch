@@ -1,7 +1,8 @@
 <launch>
+    <arg name="image_topic" default="/camera/image_raw" />
 
     <node pkg="apriltag_node" name="apriltag" type="apriltag_node" output="screen" >
-        <remap from="image_raw" to="/cam25000495/image_raw" />
+        <remap from="image_raw" to="$(arg image_topic)" />
     </node>
 
 </launch>

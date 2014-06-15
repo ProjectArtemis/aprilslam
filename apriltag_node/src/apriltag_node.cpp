@@ -27,6 +27,7 @@ const cv::Scalar colors[] = {cv::Scalar(255, 0, 0, 0), cv::Scalar(0, 255, 0, 0),
                              cv::Scalar(0, 0, 255, 0),
                              cv::Scalar(255, 0, 255, 0)};
 
+// TODO: a class to represent apriltags
 class AprilTag {
  public:
  private:
@@ -37,8 +38,6 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
   // use cv_bridge and convert to grayscale image
   cv_bridge::CvImagePtr cv_ptr;
   cv_ptr = cv_bridge::toCvCopy(image, sensor_msgs::image_encodings::MONO8);
-
-  std::vector<cv::Point2f> corners;
 
   cv::Mat image_rgb;
   cv::cvtColor(cv_ptr->image, image_rgb, CV_GRAY2RGB);
@@ -58,7 +57,6 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
 
     for (int j = 0; j < 4; j++) {
       const cv::Point2f p = cv::Point2f(det->p[j][0], det->p[j][1]);
-      corners.push_back(p);
     }
     april_tag_detection_destroy(det);
   }
@@ -76,7 +74,6 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
        iter != detections.end(); iter++) {
     for (int j = 0; j < 4; j++) {
       const cv::Point2f p = cv::Point2f(iter->p[j].first, iter->p[j].second);
-      corners.push_back(p);
     }
   }
 
