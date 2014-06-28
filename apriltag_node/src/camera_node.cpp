@@ -42,8 +42,8 @@ int main(int argc, char **argv) {
   int height, width;
   std::string calibration_url;
   nh.param<double>("fps", fps, 20.0);
-  nh.param<int>("height", height, 240);
-  nh.param<int>("width", width, 320);
+  nh.param<int>("height", height, 480);
+  nh.param<int>("width", width, 640);
   if (!nh.getParam("calibration_url", calibration_url)) {
     calibration_url = "";
     ROS_WARN("No calibration file specified.");

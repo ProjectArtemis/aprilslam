@@ -94,6 +94,10 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
         pi.push_back(p2);
         Point3 p3(tag_w[id].p[j].x, tag_w[id].p[j].y, 0.0);
         pw.push_back(p3);
+
+        // Some visualization here
+        // Show tag id
+        // Show tag corners
       }
     }
 
