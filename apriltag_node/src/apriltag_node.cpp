@@ -9,11 +9,10 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #include <vector>
-using std::vector;
 #include <map>
 #include <iostream>
-using std::cout;
-using std::endl;
+#include <sstream>
+#include <stdexcept>
 
 #define BUILD_MIT
 
@@ -38,13 +37,40 @@ typedef struct tag {
 
 static std::map<int, tag> tag_w;
 
+// blue, green, red and magenta
 const cv::Scalar colors[] = { cv::Scalar(255, 0, 0, 0),
                               cv::Scalar(0, 255, 0, 0),
                               cv::Scalar(0, 0, 255, 0),
                               cv::Scalar(255, 0, 255, 0) };
 
 void cam_callback(const sensor_msgs::ImageConstPtr &image,
-                  const sensor_msgs::CameraInfoConstPtr $cinfo) {
+                  const sensor_msgs::CameraInfoConstPtr &cinfo) {
+  // Get camera info
+  static bool init_cam = false;
+  static cv::Mat K = cv::Mat::zeros(cv::Size(3, 3), CV_64F);
+  static cv::Mat D = cv::Mat::zeros(cv::Size(1, 5), CV_64F);
+
+  // Stop if camera not calibrated
+  if (cinfo->K[0] == 0.0)
+    throw std::runtime_error("Camera not calibrated.");
+
+  // Assign camera info only once
+  if (!init_cam) {
+    for (int i = 0; i < 3; ++i) {
+      double *pk = K.ptr<double>(i);
+      for (int j = 0; j < 3; ++j) {
+        pk[j] = cinfo->K[3 * i + j];
+      }
+    }
+    double *pd = D.ptr<double>(0);
+    for (int k = 0; k < 5; k++) {
+      pd[k] = cinfo->D[k];
+    }
+    init_cam = true;
+    std::cout << K << std::endl;
+    std::cout << D << std::endl;
+  }
+
   // use cv_bridge and convert to grayscale image
   cv_bridge::CvImagePtr cv_ptr;
   // use toCvCopy because we will modify the image
@@ -85,25 +111,32 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
 
   // Check detection size
   if (detections.size()) {
-    vector<Point2> pi; // Points in image
-    vector<Point3> pw; // Points in world
+    std::vector<Point2> pi; // Points in image
+    std::vector<Point3> pw; // Points in world
     for (auto it = detections.begin(); it != detections.end(); it++) {
+      const int id = it->id;
+      const Point2 c2 = Point2(it->cxy.first, it->cxy.second);
+
       for (int j = 0; j < 4; j++) {
-        const int id = it->id;
         const Point2 p2 = Point2(it->p[j].first, it->p[j].second);
         pi.push_back(p2);
         Point3 p3(tag_w[id].p[j].x, tag_w[id].p[j].y, 0.0);
         pw.push_back(p3);
 
-        // Some visualization here
-        // Show tag id
-        // Show tag corners
+        // Display tag corners
+        cv::circle(image_rgb, p2, 6, colors[j], 2);
       }
+      // Display tag id
+      std::ostringstream ss;
+      ss << id;
+      cv::putText(image_rgb, ss.str(), Point2(c2.x - 5, c2.y + 5),
+                  cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 0, 255), 2);
     }
 
-    cv::mat r;
-    cv::Mat t;
-    cv::Mat R;
+    // Get pose
+    // cv::Mat r;
+    // cv::Mat t;
+    // cv::Mat R;
   }
 #endif
 

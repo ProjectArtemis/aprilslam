@@ -1,0 +1,10 @@
+<launch>
+
+    <node name="player" output="screen" pkg="rosbag" type="play"
+        args="--clock $(find apriltag_node)/bag/test.bag"/>
+
+    <include file="$(find apriltag_node)/launch/apriltag.launch">
+        <arg name="image_topic" value="/cam_25000495/image_raw"/>
+    </include>
+
+</launch>
