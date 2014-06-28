@@ -29,11 +29,14 @@ extern "C" {
 #include "AprilTags/Tag36h11.h"
 #endif
 
+typedef cv::Point2d Point2;
+typedef cv::Point3d Point3;
+
 typedef struct tag {
-  cv::Point2f p[4];
+  Point2 p[4];
 } tag_t;
 
-const static std::map<int, tag> tag_w;
+static std::map<int, tag> tag_w;
 
 const cv::Scalar colors[] = { cv::Scalar(255, 0, 0, 0),
                               cv::Scalar(0, 255, 0, 0),
@@ -66,7 +69,7 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
     zarray_get(detections, i, &det);
 
     for (int j = 0; j < 4; j++) {
-      const cv::Point2f p = cv::Point2f(det->p[j][0], det->p[j][1]);
+      const Point2 p = Point2(det->p[j][0], det->p[j][1]);
     }
     april_tag_detection_destroy(det);
   }
@@ -82,17 +85,21 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
 
   // Check detection size
   if (detections.size()) {
-    vector<cv::Point2f> pi; // Points in image
-    vector<cv::Point3f> pw; // Points in world
+    vector<Point2> pi; // Points in image
+    vector<Point3> pw; // Points in world
     for (auto it = detections.begin(); it != detections.end(); it++) {
       for (int j = 0; j < 4; j++) {
         const int id = it->id;
-        const cv::Point2f p2 = cv::Point2f(it->p[j].first, it->p[j].second);
+        const Point2 p2 = Point2(it->p[j].first, it->p[j].second);
         pi.push_back(p2);
-        cv::Point3f p3(tag_w[id].p[j].x, tag_w[id].p[j].y, 0.0);
+        Point3 p3(tag_w[id].p[j].x, tag_w[id].p[j].y, 0.0);
         pw.push_back(p3);
       }
     }
+
+    cv::mat r;
+    cv::Mat t;
+    cv::Mat R;
   }
 #endif
 
@@ -121,17 +128,11 @@ int main(int argc, char **argv) {
   for (int i = 0; i < 4; ++i) {
     double x = tag_center[i][0];
     double y = tag_center[i][1];
-    tag_w[i].p[0] = cv::Point2f(x - tag_size / 2, y - tag_size / 2);
-    tag_w[i].p[1] = cv::Point2f(x + tag_size / 2, y - tag_size / 2);
-    tag_w[i].p[2] = cv::Point2f(x + tag_size / 2, y + tag_size / 2);
-    tag_w[i].p[3] = cv::Point2f(x - tag_size / 2, y + tag_size / 2);
+    tag_w[i].p[0] = Point2(x - tag_size / 2, y - tag_size / 2);
+    tag_w[i].p[1] = Point2(x + tag_size / 2, y - tag_size / 2);
+    tag_w[i].p[2] = Point2(x + tag_size / 2, y + tag_size / 2);
+    tag_w[i].p[3] = Point2(x - tag_size / 2, y + tag_size / 2);
   }
-
-  // for (int i = 0; i < 4; ++i) {
-  //   for (int j = 0; j < 4; ++j) {
-  //     cout << "tag: " << i << " p: " << j << " " << tag_w[i].p[j] << endl;
-  //   }
-  // }
 
   ros::spin();
 
