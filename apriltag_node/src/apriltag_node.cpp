@@ -39,6 +39,8 @@ typedef struct tag {
 } tag_t;
 
 static std::map<int, tag> tag_w;
+
+// Publisher
 ros::Publisher pose_pub;
 ros::Publisher vec_pub;
 
@@ -92,7 +94,7 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
         pk[j] = cinfo->K[3 * i + j];
       }
     }
-    double *pd = D.ptr<double>(0);
+    double *pd = D.ptr<double>();
     for (int k = 0; k < 5; k++) {
       pd[k] = cinfo->D[k];
     }
@@ -159,12 +161,12 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
       std::ostringstream ss;
       ss << id;
       cv::putText(image_rgb, ss.str(), Point2(c2.x - 5, c2.y + 5),
-                  cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 0, 255), 2);
+                  cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 255), 2);
     }
 
     // Get pose
     static cv::Mat r = cv::Mat::zeros(cv::Size(1, 3), CV_64F);
-    static cv::Mat cTw = cv::Mat::zeros(cv::Size(3, 3), CV_64F);
+    static cv::Mat cTw = cv::Mat::zeros(cv::Size(1, 3), CV_64F);
     cv::Mat wTc(cv::Size(3, 3), CV_64F);
     cv::Mat cRw(cv::Size(3, 3), CV_64F), wRc(cv::Size(3, 3), CV_64F);
     cv::solvePnP(pw, pi, K, D, r, cTw, true);
@@ -172,18 +174,17 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
     wRc = cRw.inv();
     wTc = -wRc * cTw;
     cv::Mat q = rodriguesToQuat(r);
-    double *pq = q.ptr<double>();
 
     // Publish
     geometry_msgs::PoseStamped pose_cam;
     pose_cam.header = image->header;
 
-    double *pt = wTc.ptr<double>(0);
+    double *pt = wTc.ptr<double>();
     pose_cam.pose.position.x = pt[0];
     pose_cam.pose.position.y = pt[1];
     pose_cam.pose.position.z = pt[2];
 
-    // For now publish identity
+    double *pq = q.ptr<double>();
     pose_cam.pose.orientation.w = pq[0];
     pose_cam.pose.orientation.x = pq[1];
     pose_cam.pose.orientation.y = pq[2];
@@ -202,6 +203,7 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
   cv::imshow("image", image_rgb);
   cv::waitKey(1);
 }
+
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "apriltag_node");
