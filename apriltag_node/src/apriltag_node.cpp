@@ -1,8 +1,10 @@
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
-#include <sensor_msgs/image_encodings.h>
 #include <cv_bridge/cv_bridge.h>
 #include <apriltag_node/Tag.h>
+#include <sensor_msgs/image_encodings.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/Vector3.h>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -13,6 +15,7 @@
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#include <cmath>
 
 #define BUILD_MIT
 
@@ -36,12 +39,38 @@ typedef struct tag {
 } tag_t;
 
 static std::map<int, tag> tag_w;
+ros::Publisher pose_pub;
+ros::Publisher vec_pub;
 
 // blue, green, red and magenta
 const cv::Scalar colors[] = { cv::Scalar(255, 0, 0, 0),
                               cv::Scalar(0, 255, 0, 0),
                               cv::Scalar(0, 0, 255, 0),
                               cv::Scalar(255, 0, 255, 0) };
+
+cv::Mat rodriguesToQuat(const cv::Mat &r) {
+  // theta = norm(r)
+  // q = [cos(theta/2), sin(theta/2) * r / theta]
+  cv::Mat q = cv::Mat::zeros(cv::Size(1, 4), CV_64F);
+  double *pq = q.ptr<double>();
+  const double *pr = r.ptr<double>();
+  double x, y, z;
+  x = pr[0], y = pr[1], z = pr[2];
+  double theta = std::sqrt(x * x + y * y + z * z);
+  if (theta < std::numeric_limits<double>::epsilon() * 10.0) {
+    pq[0] = 1.0;
+    return q;
+  }
+
+  double haver_sin = std::sin(0.5 * theta);
+  double haver_cos = std::cos(0.5 * theta);
+  pq[0] = haver_cos;
+  pq[1] = haver_sin * x / theta;
+  pq[2] = haver_sin * y / theta;
+  pq[3] = haver_sin * z / theta;
+
+  return q;
+}
 
 void cam_callback(const sensor_msgs::ImageConstPtr &image,
                   const sensor_msgs::CameraInfoConstPtr &cinfo) {
@@ -54,6 +83,7 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
   if (cinfo->K[0] == 0.0)
     throw std::runtime_error("Camera not calibrated.");
 
+  // TODO: convert to function later
   // Assign camera info only once
   if (!init_cam) {
     for (int i = 0; i < 3; ++i) {
@@ -67,8 +97,6 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
       pd[k] = cinfo->D[k];
     }
     init_cam = true;
-    std::cout << K << std::endl;
-    std::cout << D << std::endl;
   }
 
   // use cv_bridge and convert to grayscale image
@@ -80,7 +108,8 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
   cv::cvtColor(cv_ptr->image, image_rgb, CV_GRAY2RGB);
 
 #if defined(BUILD_UMICH)
-  // use apriltag_umich
+  // Use apriltag_umich
+  // Currently not using this version
   static april_tag_family_t *tf = tag36h11_create();
   static april_tag_detector_t *td = april_tag_detector_create(tf);
 
@@ -109,7 +138,7 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
   std::vector<AprilTags::TagDetection> detections =
       tag_detector.extractTags(cv_ptr->image);
 
-  // Check detection size
+  // Check detection size, only do work if there's tag detected
   if (detections.size()) {
     std::vector<Point2> pi; // Points in image
     std::vector<Point3> pw; // Points in world
@@ -134,9 +163,39 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
     }
 
     // Get pose
-    // cv::Mat r;
-    // cv::Mat t;
-    // cv::Mat R;
+    static cv::Mat r = cv::Mat::zeros(cv::Size(1, 3), CV_64F);
+    static cv::Mat cTw = cv::Mat::zeros(cv::Size(3, 3), CV_64F);
+    cv::Mat wTc(cv::Size(3, 3), CV_64F);
+    cv::Mat cRw(cv::Size(3, 3), CV_64F), wRc(cv::Size(3, 3), CV_64F);
+    cv::solvePnP(pw, pi, K, D, r, cTw, true);
+    cv::Rodrigues(r, cRw);
+    wRc = cRw.inv();
+    wTc = -wRc * cTw;
+    cv::Mat q = rodriguesToQuat(r);
+    double *pq = q.ptr<double>();
+
+    // Publish
+    geometry_msgs::PoseStamped pose_cam;
+    pose_cam.header = image->header;
+
+    double *pt = wTc.ptr<double>(0);
+    pose_cam.pose.position.x = pt[0];
+    pose_cam.pose.position.y = pt[1];
+    pose_cam.pose.position.z = pt[2];
+
+    // For now publish identity
+    pose_cam.pose.orientation.w = pq[0];
+    pose_cam.pose.orientation.x = pq[1];
+    pose_cam.pose.orientation.y = pq[2];
+    pose_cam.pose.orientation.z = pq[3];
+
+    pose_pub.publish(pose_cam);
+
+    geometry_msgs::Vector3 vec;
+    vec.x = r.at<double>(0);
+    vec.y = r.at<double>(1);
+    vec.z = r.at<double>(2);
+    vec_pub.publish(vec);
   }
 #endif
 
@@ -146,16 +205,15 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "apriltag_node");
-  ros::NodeHandle nh;
+  ros::NodeHandle nh("~");
   image_transport::ImageTransport it(nh);
-
   image_transport::CameraSubscriber camera_sub =
       it.subscribeCamera("image_raw", 1, cam_callback);
-
-  // output for OpenCV
-  cv::namedWindow("image", 1);
+  pose_pub = nh.advertise<geometry_msgs::PoseStamped>("pose_cam", 1);
+  vec_pub = nh.advertise<geometry_msgs::Vector3>("vec", 1);
 
   // Initialize simple test tag position
+  // TODO: replace this part with yaml file
   double tag_size = 4.5 / 100;
   double tag_center[4][2] = { { tag_size, tag_size },
                               { tag_size, tag_size * 2 },
@@ -171,6 +229,7 @@ int main(int argc, char **argv) {
     tag_w[i].p[3] = Point2(x - tag_size / 2, y + tag_size / 2);
   }
 
+  cv::namedWindow("image", 1);
   ros::spin();
 
   return 0;
