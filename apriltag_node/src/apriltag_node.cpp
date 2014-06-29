@@ -4,7 +4,8 @@
 #include <apriltag_node/Tag.h>
 #include <sensor_msgs/image_encodings.h>
 #include <geometry_msgs/PoseStamped.h>
-#include <geometry_msgs/Vector3.h>
+#include <sensor_msgs/Image.h>
+#include <cv_bridge/cv_bridge.h>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -18,6 +19,7 @@
 #include <cmath>
 
 #define BUILD_MIT
+#define USE_RVIZ
 
 #if defined(BUILD_UMICH)
 extern "C" {
@@ -42,7 +44,9 @@ static std::map<int, tag> tag_w;
 
 // Publisher
 ros::Publisher pose_pub;
-ros::Publisher vec_pub;
+#if defined(USE_RVIZ)
+ros::Publisher image_pub;
+#endif
 
 // blue, green, red and magenta
 const cv::Scalar colors[] = { cv::Scalar(255, 0, 0, 0),
@@ -161,7 +165,7 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
       std::ostringstream ss;
       ss << id;
       cv::putText(image_rgb, ss.str(), Point2(c2.x - 5, c2.y + 5),
-                  cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 255, 255), 2);
+                  cv::FONT_HERSHEY_PLAIN, 2, cv::Scalar(0, 255, 255), 2);
     }
 
     // Get pose
@@ -192,18 +196,16 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
 
     pose_pub.publish(pose_cam);
 
-    geometry_msgs::Vector3 vec;
-    vec.x = r.at<double>(0);
-    vec.y = r.at<double>(1);
-    vec.z = r.at<double>(2);
-    vec_pub.publish(vec);
   }
 #endif
 
-  cv::imshow("image", image_rgb);
-  cv::waitKey(1);
+  // Publish image
+  cv_bridge::CvImage cv_image(image->header, sensor_msgs::image_encodings::BGR8,
+                              image_rgb);
+  image_pub.publish(cv_image.toImageMsg());
+  // cv::imshow("image", image_rgb);
+  // cv::waitKey(1);
 }
-
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "apriltag_node");
@@ -212,7 +214,6 @@ int main(int argc, char **argv) {
   image_transport::CameraSubscriber camera_sub =
       it.subscribeCamera("image_raw", 1, cam_callback);
   pose_pub = nh.advertise<geometry_msgs::PoseStamped>("pose_cam", 1);
-  vec_pub = nh.advertise<geometry_msgs::Vector3>("vec", 1);
 
   // Initialize simple test tag position
   // TODO: replace this part with yaml file
@@ -231,7 +232,8 @@ int main(int argc, char **argv) {
     tag_w[i].p[3] = Point2(x - tag_size / 2, y + tag_size / 2);
   }
 
-  cv::namedWindow("image", 1);
+  image_pub = nh.advertise<sensor_msgs::Image>("image", 1);
+  // cv::namedWindow("image", 1);
   ros::spin();
 
   return 0;
