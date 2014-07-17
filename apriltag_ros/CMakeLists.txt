@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(apriltag_node)
+project(apriltag_ros)
 
 find_package(catkin REQUIRED COMPONENTS
     roscpp image_transport cv_bridge camera_info_manager
@@ -11,7 +11,7 @@ generate_messages(DEPENDENCIES std_msgs)
 
 catkin_package()
 
-add_definitions("-std=c++11")
+add_definitions("-std=c++11 -Wall")
 
 include_directories(${catkin_INCLUDE_DIRS})
 include_directories(${OpenCV_INCLUDE_DIRS})
@@ -26,18 +26,28 @@ include_directories(${MIT_DIR})
 link_directories(${MIT_DIR}/lib)
 
 # Apriltag node
-add_executable(${PROJECT_NAME} src/apriltag_node.cpp)
-target_link_libraries(${PROJECT_NAME}
-    ${catkin_LIBRARIES} ${OpenCV_LIBRARIES}
-    apriltag_mit apriltag_umich)
-add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS})
+add_executable(${PROJECT_NAME}_node
+    src/apriltag_ros_node.cpp
+    )
+target_link_libraries(${PROJECT_NAME}_node
+    ${catkin_LIBRARIES}
+    ${OpenCV_LIBRARIES}
+    apriltag_mit
+    apriltag_umich
+    )
+
+add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
 # Camera node
-add_executable(camera_node src/camera_node.cpp)
+add_executable(camera_node
+    src/camera_node.cpp
+    )
 target_link_libraries(camera_node
-    ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+    ${catkin_LIBRARIES}
+    ${OpenCV_LIBRARIES}
+    )
 
 # Test
-add_executable(apriltag_test src/test.cpp)
-target_link_libraries(apriltag_test ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+#add_executable(apriltag_test src/test.cpp)
+#target_link_libraries(apriltag_test ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 

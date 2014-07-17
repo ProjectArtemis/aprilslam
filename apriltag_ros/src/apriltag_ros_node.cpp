@@ -207,7 +207,7 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
 }
 
 int main(int argc, char **argv) {
-  ros::init(argc, argv, "apriltag_node");
+  ros::init(argc, argv, "apriltag_ros");
   ros::NodeHandle nh("~");
   image_transport::ImageTransport it(nh);
   image_transport::CameraSubscriber camera_sub =

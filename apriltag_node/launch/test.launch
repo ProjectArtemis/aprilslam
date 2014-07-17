@@ -1,8 +1,0 @@
-<launch>
-
-    <include file="$(find apriltag_node)/launch/camera.launch" />
-    <include file="$(find apriltag_node)/launch/apriltag.launch" >
-        <arg name="image_topic" value="/camera/image_raw" />
-    </include>
-
-</launch>
