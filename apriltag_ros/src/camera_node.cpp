@@ -20,7 +20,7 @@ typedef boost::shared_ptr<CameraInfoManager> CameraInfoManagerPtr;
 bool CheckCameraInfo(const CameraInfoPtr &cinfo, const int height,
                      const int width) {
   // Check calibration dimension
-  if (cinfo->width != width || cinfo->height != height) {
+  if (cinfo->width != static_cast<unsigned>(width) || cinfo->height != static_cast<unsigned>(height)) {
     ROS_WARN("apriltag: Calibration dimension mismatch.");
     return false;
   }
