@@ -5,6 +5,8 @@ message(STATUS "Project: " ${PROJECT_NAME})
 message(STATUS "Source: " ${PROJECT_SOURCE_DIR})
 message(STATUS "Binary: " ${PROJECT_BINARY_DIR})
 
+add_definitions("-Wall -std=c++11")
+
 #set the default path for built executables to the "bin" directory
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory

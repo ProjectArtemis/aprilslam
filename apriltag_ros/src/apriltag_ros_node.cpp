@@ -1,7 +1,6 @@
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
-#include <apriltag_node/Tag.h>
 #include <sensor_msgs/image_encodings.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <sensor_msgs/Image.h>
@@ -208,7 +207,7 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
 }
 
 int main(int argc, char **argv) {
-  ros::init(argc, argv, "apriltag_node");
+  ros::init(argc, argv, "apriltag_ros");
   ros::NodeHandle nh("~");
   image_transport::ImageTransport it(nh);
   image_transport::CameraSubscriber camera_sub =

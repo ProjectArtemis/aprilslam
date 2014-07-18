@@ -1,8 +1,8 @@
 <package>
 
-  <name>apriltag_node</name>
+  <name>apriltag_ros</name>
   <version>0.0.1</version>
-  <description>The apriltag node</description>
+  <description>The apriltag ros package</description>
   <maintainer email="quchao@seas.upenn.edu">quchao</maintainer>
   <author>Chao Qu</author>
   <license>GPL</license>

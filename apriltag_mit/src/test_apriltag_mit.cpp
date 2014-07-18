@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
     vector<AprilTags::TagDetection> detections =
         tag_detector.extractTags(image_gray);
 
-    for (int i = 0; i < detections.size(); ++i) detections[i].draw(image);
+    for (unsigned i = 0; i < detections.size(); ++i) detections[i].draw(image);
     cv::imshow("camera", image);  // display frame
 
     if (cv::waitKey(10) >= 0) break;

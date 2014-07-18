@@ -1,7 +1,7 @@
 <launch>
     <arg name="image_topic" default="/camera/image_raw" />
 
-    <node pkg="apriltag_node" name="apriltag" type="apriltag_node" output="screen" >
+    <node pkg="apriltag_ros" name="apriltag" type="apriltag_ros_node" output="screen" >
         <remap from="~image_raw" to="$(arg image_topic)" />
     </node>
 
