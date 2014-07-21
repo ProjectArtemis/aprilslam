@@ -180,7 +180,8 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
 
     // Publish
     geometry_msgs::PoseStamped pose_cam;
-    pose_cam.header = image->header;
+    pose_cam.header.stamp = image->header.stamp;
+    pose_cam.header.frame_id = "0";
 
     double *pt = wTc.ptr<double>();
     pose_cam.pose.position.x = pt[0];
