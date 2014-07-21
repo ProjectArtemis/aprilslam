@@ -28,12 +28,14 @@ link_directories(${MIT_DIR}/lib)
 # Apriltag node
 add_executable(${PROJECT_NAME}_node
     src/apriltag_ros_node.cpp
+    src/tag_yaml.cpp
     )
 target_link_libraries(${PROJECT_NAME}_node
     ${catkin_LIBRARIES}
     ${OpenCV_LIBRARIES}
     apriltag_mit
     apriltag_umich
+    yaml-cpp
     )
 
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS})
@@ -50,4 +52,3 @@ target_link_libraries(camera_node
 # Test
 #add_executable(apriltag_test src/test.cpp)
 #target_link_libraries(apriltag_test ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-

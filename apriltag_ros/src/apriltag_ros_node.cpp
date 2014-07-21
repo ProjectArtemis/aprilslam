@@ -32,15 +32,12 @@ extern "C" {
 #include "AprilTags/Tag36h11.h"
 #endif
 
+#include "tag_yaml.hpp"
+
 typedef cv::Point2d Point2;
 typedef cv::Point3d Point3;
 
-struct tag {
-  int id;       /// Tag ID
-  Point2 p[4];  /// Corners
-};
-
-static std::map<int, tag> tag_w;
+std::map<int, apriltag_ros::Tag> tagsWorld;
 
 // Publisher
 ros::Publisher pose_pub;
@@ -155,7 +152,7 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
       for (int j = 0; j < 4; j++) {
         const Point2 p2 = Point2(it->p[j].first, it->p[j].second);
         pi.push_back(p2);
-        Point3 p3(tag_w[id].p[j].x, tag_w[id].p[j].y, 0.0);
+        Point3 p3(tagsWorld[id].p[j].x, tagsWorld[id].p[j].y, 0.0);
         pw.push_back(p3);
 
         // Display tag corners
@@ -164,8 +161,12 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
       // Display tag id
       std::ostringstream ss;
       ss << id;
+      auto color = cv::Scalar(0, 255, 255);
+      if (tagsWorld.find(id) != tagsWorld.end()) {
+        color = cv::Scalar(255,255,0);
+      }
       cv::putText(image_rgb, ss.str(), Point2(c2.x - 5, c2.y + 5),
-                  cv::FONT_HERSHEY_PLAIN, 2, cv::Scalar(0, 255, 255), 2);
+                  cv::FONT_HERSHEY_PLAIN, 2, color, 2);
     }
 
     // Get pose
@@ -216,25 +217,57 @@ int main(int argc, char **argv) {
       it.subscribeCamera("image_raw", 1, cam_callback);
   pose_pub = nh.advertise<geometry_msgs::PoseStamped>("pose_cam", 1);
 
+  //  load YAML file with tag positions
+  std::string yamlPath;
+  if (!nh.hasParam("map_file")) {
+    ROS_ERROR("Error: You must specify the map_file parameter.");
+    return -1;
+  }
+  nh.getParam("map_file", yamlPath);
+
+  try {
+    YAML::Node mapNode = YAML::LoadFile(yamlPath);
+
+    if (!mapNode.IsSequence()) {
+      throw std::runtime_error("YAML file should be a sequence of tags");
+    }
+
+    for (size_t i=0; i < mapNode.size(); i++) {
+      apriltag_ros::Tag tag = mapNode[i].as<apriltag_ros::Tag>();
+      tagsWorld[tag.id] = tag;  //  add to map
+    }
+
+    if (tagsWorld.empty()) {
+      throw std::runtime_error("No tags were loaded");
+    } else {
+      ROS_INFO("Loaded %lu tags from the map file", tagsWorld.size());
+    }
+  }
+  catch(std::exception& e) {
+    ROS_ERROR("Error: Failed to load map file: %s", yamlPath.c_str());
+    ROS_ERROR("Reason: %s", e.what());
+    return -1;
+  }
+
   // Initialize simple test tag position
   // TODO: replace this part with yaml file
   double tag_size = 4.5 / 100;
   double tag_center[4][2] = { { tag_size, tag_size },
-                              { tag_size, tag_size * 2 },
-                              { tag_size * 2, tag_size },
-                              { tag_size * 2, tag_size * 2 } };
+                              { tag_size, tag_size * 3 },
+                              { tag_size * 3, tag_size },
+                              { tag_size * 3, tag_size * 3 } };
 
   for (int i = 0; i < 4; ++i) {
     double x = tag_center[i][0];
     double y = tag_center[i][1];
-    tag_w[i].p[0] = Point2(x - tag_size / 2, y - tag_size / 2);
-    tag_w[i].p[1] = Point2(x + tag_size / 2, y - tag_size / 2);
-    tag_w[i].p[2] = Point2(x + tag_size / 2, y + tag_size / 2);
-    tag_w[i].p[3] = Point2(x - tag_size / 2, y + tag_size / 2);
+    ROS_INFO("Tag %i", i);
+    ROS_INFO("%f, %f", x - tag_size / 2, y - tag_size / 2);
+    ROS_INFO("%f, %f", x + tag_size / 2, y - tag_size / 2);
+    ROS_INFO("%f, %f", x + tag_size / 2, y + tag_size / 2);
+    ROS_INFO("%f, %f", x - tag_size / 2, y + tag_size / 2);
   }
 
   image_pub = nh.advertise<sensor_msgs::Image>("image", 1);
-  // cv::namedWindow("image", 1);
   ros::spin();
 
   return 0;

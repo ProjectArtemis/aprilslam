@@ -1,8 +1,10 @@
 <launch>
     <arg name="image_topic" default="/camera/image_raw" />
+    <arg name="map_file" default="$(find apriltag_ros)/maps/test_board.yaml"/>
 
     <node pkg="apriltag_ros" name="apriltag" type="apriltag_ros_node" output="screen" >
         <remap from="~image_raw" to="$(arg image_topic)" />
+        <param name="map_file" value="$(arg map_file)"/>
     </node>
 
 </launch>
