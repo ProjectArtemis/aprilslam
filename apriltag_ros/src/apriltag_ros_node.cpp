@@ -35,9 +35,10 @@ extern "C" {
 typedef cv::Point2d Point2;
 typedef cv::Point3d Point3;
 
-typedef struct tag {
-  Point2 p[4];
-} tag_t;
+struct tag {
+  int id;       /// Tag ID
+  Point2 p[4];  /// Corners
+};
 
 static std::map<int, tag> tag_w;
 
