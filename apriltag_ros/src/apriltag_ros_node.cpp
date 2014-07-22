@@ -174,10 +174,11 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
     static cv::Mat cTw = cv::Mat::zeros(cv::Size(1, 3), CV_64F);
     cv::Mat wTc(cv::Size(3, 3), CV_64F);
     cv::Mat cRw(cv::Size(3, 3), CV_64F), wRc(cv::Size(3, 3), CV_64F);
-    cv::solvePnP(pw, pi, K, D, r, cTw, true);
+    cv::solvePnP(pw, pi, K, D, r, cTw, false);
     cv::Rodrigues(r, cRw);
     wRc = cRw.inv();
     wTc = -wRc * cTw;
+    // ROS_INFO("%f, %f, %f", r.at<double>(0,0), r.at<double>(1,0), r.at<double>(2,0));
     cv::Mat q = rodriguesToQuat(r);
 
     // Publish
@@ -247,24 +248,6 @@ int main(int argc, char **argv) {
     ROS_ERROR("Error: Failed to load map file: %s", yamlPath.c_str());
     ROS_ERROR("Reason: %s", e.what());
     return -1;
-  }
-
-  // Initialize simple test tag position
-  // TODO: replace this part with yaml file
-  double tag_size = 4.5 / 100;
-  double tag_center[4][2] = { { tag_size, tag_size },
-                              { tag_size, tag_size * 3 },
-                              { tag_size * 3, tag_size },
-                              { tag_size * 3, tag_size * 3 } };
-
-  for (int i = 0; i < 4; ++i) {
-    double x = tag_center[i][0];
-    double y = tag_center[i][1];
-    ROS_INFO("Tag %i", i);
-    ROS_INFO("%f, %f", x - tag_size / 2, y - tag_size / 2);
-    ROS_INFO("%f, %f", x + tag_size / 2, y - tag_size / 2);
-    ROS_INFO("%f, %f", x + tag_size / 2, y + tag_size / 2);
-    ROS_INFO("%f, %f", x - tag_size / 2, y + tag_size / 2);
   }
 
   image_pub = nh.advertise<sensor_msgs::Image>("image", 1);
