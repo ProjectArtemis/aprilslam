@@ -19,6 +19,8 @@ int main(int argc, char ** argv) {
   //  encode into map
   YAML::Emitter emitter;
   emitter << YAML::Comment("MRSL Floor Map, 9x12 tags");
+  emitter << YAML::BeginSeq;
+  emitter << YAML::Block;
   
   for (int i=0; i < 9; i++) {
     x = 0.0;
@@ -41,6 +43,8 @@ int main(int argc, char ** argv) {
       y += 0.152 * 2;
     }
   }
+  emitter << YAML::EndSeq;
+  emitter << YAML::Comment("End of map");
   
   //  save to disk
   FILE * output = fopen(argv[1], "w");
