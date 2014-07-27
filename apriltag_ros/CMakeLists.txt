@@ -50,11 +50,12 @@ target_link_libraries(camera_node
     )
 
 # Map generator
-add_executable(map_generator
+add_executable(generate_map
   src/generate_map.cpp
+  src/tag_yaml.cpp
 )
 
-target_link_libraries(map_generator 
+target_link_libraries(generate_map 
   ${catkin_LIBRARIES} 
   ${OpenCV_LIBRARIES}
   yaml-cpp

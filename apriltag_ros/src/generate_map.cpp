@@ -1,16 +1,25 @@
 #include "tag_yaml.hpp"
 #include <vector>
+#include <iostream>
 
 using namespace apriltag_ros;
 
-int main(int arg, char ** argv) {
+int main(int argc, char ** argv) {
+
+  if (argc != 2) {
+    printf("usage: generate_map <output path>\n");
+    return -1;
+  }
 
   double x = 0, y = 0;
   int tag_id = 0;
 
-  YAML::Node node;
   Tag tag;
-
+  
+  //  encode into map
+  YAML::Emitter emitter;
+  emitter << YAML::Comment("MRSL Floor Map, 9x12 tags");
+  
   for (int i=0; i < 9; i++) {
     x = 0.0;
 
@@ -21,9 +30,9 @@ int main(int arg, char ** argv) {
       tag.p[2] = cv::Point3d(x,y+0.152,0);
       tag.p[3] = cv::Point3d(x,y,0);
 
-      node.push_back(tag);
+      emitter << tag;
 
-      x += 0.152*2.0;
+      x += 0.152 * 2;
     }
 
     if (i==2 || i==5) {
@@ -32,6 +41,17 @@ int main(int arg, char ** argv) {
       y += 0.152 * 2;
     }
   }
-
+  
+  //  save to disk
+  FILE * output = fopen(argv[1], "w");
+  if (!output) {
+    printf("Failed to open %s for writing\n", argv[1]);
+    return -1;
+  }
+  
+  fprintf(output,"%s", emitter.c_str());
+  fclose(output);
+  
+  printf("Wrote to %s\n", argv[1]);
   return 0;
 }
