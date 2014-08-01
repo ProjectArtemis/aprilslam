@@ -41,3 +41,22 @@ bool YAML::convert<apriltag_ros::Tag>::decode(const YAML::Node &node, apriltag_r
   
   return true;
 }
+
+YAML::Emitter& operator << (YAML::Emitter& out, const apriltag_ros::Tag& tag) {  
+  out << YAML::Block;
+  out << YAML::BeginMap;
+  out << YAML::Key << "id" << YAML::Value << tag.id;
+  out << YAML::Key << "corners" << YAML::Value;
+  out << YAML::BeginSeq;
+  for (int i=0; i < 4; i++) {
+    out << YAML::Flow;
+    out << YAML::BeginMap;
+    out << YAML::Key << "x" << YAML::Value << tag.p[i].x;
+    out << YAML::Key << "y" << YAML::Value << tag.p[i].y;
+    out << YAML::Key << "z" << YAML::Value << tag.p[i].z;
+    out << YAML::EndMap;
+  }
+  out << YAML::EndSeq;
+  out << YAML::EndMap;
+  return out;
+}

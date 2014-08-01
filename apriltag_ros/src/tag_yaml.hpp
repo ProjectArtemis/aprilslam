@@ -24,4 +24,6 @@ template <> struct convert<apriltag_ros::Tag> {
 };
 } // namespace YAML
 
+YAML::Emitter& operator << (YAML::Emitter& out, const apriltag_ros::Tag& tag);
+
 #endif // TAG_YAML_HPP

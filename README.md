@@ -22,10 +22,10 @@ cd ..
 ./bin/test_apriltag_umich
 ```
 
-apriltag_node - a ros node for detecting apriltag
+apriltag_node - a ros node for detecting apriltag. Requires Ubuntu 14 and ROS Indigo or higher.
 ```bash
 cd apriltag_node
-mkdri build
+mkdir build
 cmake ..
 make
 ```

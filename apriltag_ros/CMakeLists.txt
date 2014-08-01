@@ -49,6 +49,18 @@ target_link_libraries(camera_node
     ${OpenCV_LIBRARIES}
     )
 
+# Map generator
+add_executable(generate_map
+  src/generate_map.cpp
+  src/tag_yaml.cpp
+)
+
+target_link_libraries(generate_map 
+  ${catkin_LIBRARIES} 
+  ${OpenCV_LIBRARIES}
+  yaml-cpp
+)
+
 # Test
 #add_executable(apriltag_test src/test.cpp)
 #target_link_libraries(apriltag_test ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
