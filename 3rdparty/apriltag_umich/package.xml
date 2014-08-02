@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <name>apriltag_umich</name>
+  <version>0.1.0</version>
+  <description>
+    A C Apriltag library
+  </description>
+  <author>Edwin Olson</author>
+  <maintainer email="quchao@seas.upenn.edu">Chao Qu</maintainer>
+  <license>GPLv3</license>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>roscpp</build_depend>
+  <build_depend>roslib</build_depend>
+
+  <!-- Dependencies needed after this package is compiled. -->
+  <run_depend>roscpp</run_depend>
+  <run_depend>roslib</run_depend>
+
+</package>
