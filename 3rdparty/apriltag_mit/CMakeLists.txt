@@ -3,20 +3,21 @@ project(apriltag_mit)
 
 set(USE_ROS TRUE)
 
-set(CMAKE_CXX_FLAGS "-Wall -std=c++11 -fPIC")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11 -fPIC")
 set(CMAKE_BUILD_TYPE Release)
 
-find_package(Eigen3 REQUIRED)
+find_package(cmake_modules)
+find_package(Eigen REQUIRED)
 find_package(OpenCV REQUIRED)
 
 include_directories(include)
-include_directories(${OpenCV_INCLUDE_DIRS} ${Eigen3_INCLUDE_DIRS})
+include_directories(${OpenCV_INCLUDE_DIRS} ${Eigen_INCLUDE_DIRS})
 
 if(USE_ROS)
-    find_package(catkin REQUIRED COMPONENTS roscpp)
+    find_package(catkin REQUIRED)
     catkin_package(
         DEPENDS Eigen OpenCV
-        CATKIN_DEPENDS roscpp
+        CATKIN_DEPENDS
         INCLUDE_DIRS include
         LIBRARIES ${PROJECT_NAME}
         )
@@ -32,7 +33,7 @@ file(GLOB CC_FILES ${PROJECT_SOURCE_DIR}/src/*.cc)
 add_library(${PROJECT_NAME} SHARED ${CC_FILES})
 target_link_libraries(${PROJECT_NAME}
     ${OpenCV_LIBRARIES}
-    ${Eigen3_LIBRARIES}
+    ${Eigen_LIBRARIES}
     )
 
 add_executable(test_apriltag_mit src/test/test_apriltag_mit.cpp)
