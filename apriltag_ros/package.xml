@@ -3,7 +3,7 @@
   <name>apriltag_ros</name>
   <version>0.0.1</version>
   <description>The apriltag ros package</description>
-  <maintainer email="quchao@seas.upenn.edu">quchao</maintainer>
+  <maintainer email="quchao@seas.upenn.edu">Chao Qu</maintainer>
   <author>Chao Qu</author>
   <license>GPL</license>
   <url>http://ros.org/wiki/apriltag_node</url>
@@ -14,7 +14,6 @@
   <build_depend>image_transport</build_depend>
   <build_depend>cv_bridge</build_depend>
   <build_depend>camera_info_manager</build_depend>
-  <build_depend>std_msgs</build_depend>
   <build_depend>sensor_msgs</build_depend>
   <build_depend>geometry_msgs</build_depend>
   <build_depend>message_generation</build_depend>
@@ -23,7 +22,6 @@
   <run_depend>image_transport</run_depend>
   <run_depend>cv_bridge</run_depend>
   <run_depend>camera_info_manager</run_depend>
-  <run_depend>std_msgs</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>geometry_msgs</run_depend>
   <run_depend>message_runtime</run_depend>

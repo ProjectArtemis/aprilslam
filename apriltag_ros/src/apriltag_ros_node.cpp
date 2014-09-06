@@ -46,10 +46,9 @@ ros::Publisher image_pub;
 #endif
 
 // blue, green, red and magenta
-const cv::Scalar colors[] = { cv::Scalar(255, 0, 0, 0),
-                              cv::Scalar(0, 255, 0, 0),
-                              cv::Scalar(0, 0, 255, 0),
-                              cv::Scalar(255, 0, 255, 0) };
+const cv::Scalar colors[] = {cv::Scalar(255, 0, 0, 0), cv::Scalar(0, 255, 0, 0),
+                             cv::Scalar(0, 0, 255, 0),
+                             cv::Scalar(255, 0, 255, 0)};
 
 cv::Mat rodriguesToQuat(const cv::Mat &r) {
   // theta = norm(r)
@@ -83,8 +82,7 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
   static cv::Mat D = cv::Mat::zeros(cv::Size(1, 5), CV_64F);
 
   // Stop if camera not calibrated
-  if (cinfo->K[0] == 0.0)
-    throw std::runtime_error("Camera not calibrated.");
+  if (cinfo->K[0] == 0.0) throw std::runtime_error("Camera not calibrated.");
 
   // TODO: convert to function later
   // Assign camera info only once
@@ -143,8 +141,8 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
 
   // Check detection size, only do work if there's tag detected
   if (detections.size()) {
-    std::vector<Point2> pi; // Points in image
-    std::vector<Point3> pw; // Points in world
+    std::vector<Point2> pi;  // Points in image
+    std::vector<Point3> pw;  // Points in world
     for (auto it = detections.begin(); it != detections.end(); it++) {
       const int id = it->id;
       const Point2 c2 = Point2(it->cxy.first, it->cxy.second);
@@ -163,7 +161,7 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
       ss << id;
       auto color = cv::Scalar(0, 255, 255);
       if (tagsWorld.find(id) != tagsWorld.end()) {
-        color = cv::Scalar(255,255,0);
+        color = cv::Scalar(255, 255, 0);
       }
       cv::putText(image_rgb, ss.str(), Point2(c2.x - 5, c2.y + 5),
                   cv::FONT_HERSHEY_PLAIN, 2, color, 2);
@@ -178,7 +176,8 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
     cv::Rodrigues(r, cRw);
     wRc = cRw.inv();
     wTc = -wRc * cTw;
-    // ROS_INFO("%f, %f, %f", r.at<double>(0,0), r.at<double>(1,0), r.at<double>(2,0));
+    // ROS_INFO("%f, %f, %f", r.at<double>(0,0), r.at<double>(1,0),
+    // r.at<double>(2,0));
     cv::Mat q = rodriguesToQuat(r);
 
     // Publish
@@ -198,7 +197,6 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
     pose_cam.pose.orientation.z = pq[3];
 
     pose_pub.publish(pose_cam);
-
   }
 #endif
 
@@ -233,7 +231,7 @@ int main(int argc, char **argv) {
       throw std::runtime_error("YAML file should be a sequence of tags");
     }
 
-    for (size_t i=0; i < mapNode.size(); i++) {
+    for (size_t i = 0; i < mapNode.size(); i++) {
       apriltag_ros::Tag tag = mapNode[i].as<apriltag_ros::Tag>();
       tagsWorld[tag.id] = tag;  //  add to map
     }
@@ -244,7 +242,7 @@ int main(int argc, char **argv) {
       ROS_INFO("Loaded %lu tags from the map file", tagsWorld.size());
     }
   }
-  catch(std::exception& e) {
+  catch (std::exception &e) {
     ROS_ERROR("Error: Failed to load map file: %s", yamlPath.c_str());
     ROS_ERROR("Reason: %s", e.what());
     return -1;

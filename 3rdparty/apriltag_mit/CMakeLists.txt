@@ -3,8 +3,7 @@ project(apriltag_mit)
 
 set(USE_ROS TRUE)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11 -fPIC")
-set(CMAKE_BUILD_TYPE Release)
+add_definitions(-std=c++11 -Wall -fPIC)
 
 find_package(cmake_modules)
 find_package(Eigen REQUIRED)
@@ -21,13 +20,13 @@ if(USE_ROS)
         INCLUDE_DIRS include
         LIBRARIES ${PROJECT_NAME}
         )
-else(USE_ROS)
+else()
     message(STATUS "Source:  " ${PROJECT_SOURCE_DIR})
     message(STATUS "Binary:  " ${PROJECT_BINARY_DIR})
     set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
     set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
     link_directories(${PROJECT_SOURCE_DIR}/lib)
-endif(USE_ROS)
+endif()
 
 file(GLOB CC_FILES ${PROJECT_SOURCE_DIR}/src/*.cc)
 add_library(${PROJECT_NAME} SHARED ${CC_FILES})
@@ -36,7 +35,8 @@ target_link_libraries(${PROJECT_NAME}
     ${Eigen_LIBRARIES}
     )
 
-add_executable(test_apriltag_mit src/test/test_apriltag_mit.cpp)
+add_executable(test_apriltag_mit
+    src/test/test_apriltag_mit.cpp)
 target_link_libraries(test_apriltag_mit
     ${OpenCV_LIBRARIES}
     ${PROJECT_NAME}

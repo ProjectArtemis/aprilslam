@@ -3,18 +3,15 @@ project(apriltag_umich)
 
 set(USE_ROS TRUE)
 
-set(CMAKE_C_FLAGS "-std=gnu99 -fPIC")
-set(CMAKE_BUILD_TYPE Release)
-
-message(STATUS "Project: " ${PROJECT_NAME})
+add_definitions(-std=gnu99 -fPIC)
 
 find_package (Threads)
 include_directories(include)
 
 if(USE_ROS)
-    find_package(catkin REQUIRED COMPONENTS roscpp)
+    find_package(catkin REQUIRED)
     catkin_package(
-        CATKIN_DEPENDS roscpp
+        CATKIN_DEPENDS
         INCLUDE_DIRS include
         LIBRARIES ${PROJECT_NAME}
         )
