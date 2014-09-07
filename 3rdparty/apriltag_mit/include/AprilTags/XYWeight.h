@@ -1,5 +1,5 @@
-#ifndef XYWeight_H_
-#define XYWeight_H_
+#ifndef APRILTAGS_XYWEIGHT_H_
+#define APRILTAGS_XYWEIGHT_H_
 
 namespace AprilTags {
 
@@ -13,6 +13,6 @@ struct XYWeight {
       : x(xval), y(yval), weight(weightval) {}
 };
 
-}  // namespace
+}  // namespace AprilTags
 
-#endif
+#endif // APRILTAGS_XYWEIGHT_H_

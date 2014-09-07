@@ -1,5 +1,5 @@
-#ifndef GLINE2D_H
-#define GLINE2D_H
+#ifndef APRILTAGS_GLINE2D_H_
+#define APRILTAGS_GLINE2D_H_
 
 #include <cmath>
 #include <utility>
@@ -75,6 +75,6 @@ class GLine2D {
   bool didNormalizeP;
 };
 
-}  // namespace
+}  // namespace AprilTags
 
-#endif
+#endif  // APRILTAGS_GLINE2D_H_

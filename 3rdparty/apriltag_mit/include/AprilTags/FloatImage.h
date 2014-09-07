@@ -1,5 +1,5 @@
-#ifndef FLOATIMAGE_H
-#define FLOATIMAGE_H
+#ifndef APRILTAGS_FLOATIMAGE_H_
+#define APRILTAGS_FLOATIMAGE_H_
 
 #include <algorithm>
 #include <vector>
@@ -57,6 +57,6 @@ class FloatImage {
   void printMinMax() const;
 };
 
-}  // namespace
+}  // namespace AprilTags
 
-#endif
+#endif  // APRILTAGS_FLOATIMAGE_H_

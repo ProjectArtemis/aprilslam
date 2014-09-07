@@ -1,7 +1,5 @@
-//-*-c++-*-
-
-#ifndef MATHUTIL_H
-#define MATHUTIL_H
+#ifndef APRILTAGS_MATHUTIL_H_
+#define APRILTAGS_MATHUTIL_H_
 
 #include <cmath>
 #include <cfloat>
@@ -67,6 +65,6 @@ class MathUtil {
   }
 };
 
-}  // namespace
+}  // namespace AprilTags
 
-#endif
+#endif  // APRILTAGS_MATHUTIL_H_

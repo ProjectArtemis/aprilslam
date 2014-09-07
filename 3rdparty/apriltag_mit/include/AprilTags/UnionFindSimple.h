@@ -1,5 +1,5 @@
-#ifndef UNIONFINDSIMPLE_H
-#define UNIONFINDSIMPLE_H
+#ifndef APRILTAGS_UNIONFINDSIMPLE_H_
+#define APRILTAGS_UNIONFINDSIMPLE_H_
 
 #include <vector>
 
@@ -23,7 +23,7 @@ class UnionFindSimple {
   int getRepresentative(int thisId);
 
   //! Returns the id of the merged node.
-  /*  @param aId
+  /** @param aId
    *  @param bId
    */
   int connectNodes(int aId, int bId);
@@ -36,6 +36,6 @@ class UnionFindSimple {
   std::vector<Data> data;
 };
 
-}  // namespace
+}  // namespace AprilTags
 
-#endif
+#endif  // APRILTAGS_UNIONFINDSIMPLE_H_

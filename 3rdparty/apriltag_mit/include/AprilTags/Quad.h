@@ -1,5 +1,5 @@
-#ifndef QUAD_H
-#define QUAD_H
+#ifndef APRILTAGS_QUAD_H_
+#define APRILTAGS_QUAD_H_
 
 #include <utility>
 #include <vector>
@@ -75,6 +75,6 @@ class Quad {
 #endif
 };
 
-}  // namespace
+}  // namespace AprilTags
 
-#endif
+#endif  // APRILTAGS_QUAD_H_

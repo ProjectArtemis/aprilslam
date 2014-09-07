@@ -1,5 +1,5 @@
-#ifndef GRIDDER_H
-#define GRIDDER_H
+#ifndef APRILTAGS_GRIDDER_H_
+#define APRILTAGS_GRIDDER_H_
 
 #include <algorithm>
 #include <iterator>
@@ -188,6 +188,6 @@ class Gridder {
   }
 };
 
-}  // namespace
+}  // namespace AprilTags
 
-#endif
+#endif  // APRILTAGS_GRIDDER_H_

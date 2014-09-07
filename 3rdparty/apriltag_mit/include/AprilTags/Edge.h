@@ -1,5 +1,5 @@
-#ifndef EDGE_H
-#define EDGE_H
+#ifndef APRILTAGS_EDGE_H_
+#define APRILTAGS_EDGE_H_
 
 #include <vector>
 
@@ -58,6 +58,6 @@ class Edge {
                          float mmax[]);
 };
 
-}  // namespace
+}  // namespace AprilTags
 
-#endif
+#endif  // APRILTAGS_EDGE_H_

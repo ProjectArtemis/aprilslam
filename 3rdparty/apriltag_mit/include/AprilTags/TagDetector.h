@@ -1,5 +1,5 @@
-#ifndef TAGDETECTOR_H
-#define TAGDETECTOR_H
+#ifndef APRILTAGS_TAGDETECTOR_H_
+#define APRILTAGS_TAGDETECTOR_H_
 
 #include <vector>
 
@@ -22,6 +22,6 @@ class TagDetector {
   std::vector<TagDetection> extractTags(const cv::Mat& image);
 };
 
-}  // namespace
+}  // namespace AprilTags
 
-#endif
+#endif  // APRILTAGS_TAGDETECTOR_H_

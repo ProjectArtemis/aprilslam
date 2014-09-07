@@ -1,7 +1,5 @@
-//-*-c++-*-
-
-#ifndef GRAYMODEL_H
-#define GRAYMODEL_H
+#ifndef APRILTAGS_GRAYMODEL_H_
+#define APRILTAGS_GRAYMODEL_H_
 
 #include <Eigen/Dense>
 #include <vector>
@@ -41,6 +39,6 @@ class GrayModel {
   bool dirty;  //!< True if we've added an observation and need to recompute v
 };
 
-}  // namespace
+}  // namespace AprilTags
 
-#endif
+#endif  // APRILTAGS_GRAYMODEL_H_

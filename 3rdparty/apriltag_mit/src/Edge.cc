@@ -120,4 +120,4 @@ void Edge::mergeEdges(std::vector<Edge> &edges, UnionFindSimple &uf,
   }
 }
 
-}  // namespace
+}  // namespace AprilTags

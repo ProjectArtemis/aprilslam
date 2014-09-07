@@ -1,5 +1,5 @@
-#ifndef TAGFAMILY_H
-#define TAGFAMILY_H
+#ifndef APRILTAGS_TAGFAMILY_H_
+#define APRILTAGS_TAGFAMILY_H_
 
 #include <climits>
 #include <cmath>
@@ -104,6 +104,6 @@ class TagFamily {
   } initializer;
 };
 
-}  // namespace
+}  // namespace AprilTags
 
-#endif
+#endif  // APRILTAGS_TAGFAMILY_H_

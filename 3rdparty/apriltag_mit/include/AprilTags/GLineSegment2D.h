@@ -1,5 +1,5 @@
-#ifndef GLINESEGMENT2D_H
-#define GLINESEGMENT2D_H
+#ifndef APRILTAGS_GLINESEGMENT2D_H_
+#define APRILTAGS_GLINESEGMENT2D_H_
 
 #include <algorithm>
 #include <cfloat>
@@ -29,4 +29,4 @@ class GLineSegment2D {
 
 }  // namespace
 
-#endif
+#endif  // APRILTAGS_GLINESEGMENT2D_H_

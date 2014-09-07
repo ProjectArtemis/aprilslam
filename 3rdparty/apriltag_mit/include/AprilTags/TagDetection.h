@@ -1,5 +1,5 @@
-#ifndef TAGDETECTION_H
-#define TAGDETECTION_H
+#ifndef APRILTAGS_TAGDETECTION_H_
+#define APRILTAGS_TAGDETECTION_H_
 
 #include <Eigen/Dense>
 
@@ -101,6 +101,6 @@ struct TagDetection {
   void draw(cv::Mat& image) const;
 };
 
-}  // namespace
+}  // namespace AprilTags
 
-#endif
+#endif  // APRILTAGS_TAGDETECTION_H_

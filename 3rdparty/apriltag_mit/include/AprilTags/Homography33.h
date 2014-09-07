@@ -1,7 +1,5 @@
-//-*-c++-*-
-
-#ifndef HOMOGRAPHY33_H
-#define HOMOGRAPHY33_H
+#ifndef APRILTAGS_HOMOGRAPHY33_H_
+#define APRILTAGS_HOMOGRAPHY33_H_
 
 #include <utility>
 #include <vector>
@@ -70,4 +68,4 @@ class Homography33 {
 #endif
 };
 
-#endif
+#endif  // APRILTAGS_HOMOGRAPHY33_H_

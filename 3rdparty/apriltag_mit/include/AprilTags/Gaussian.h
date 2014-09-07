@@ -1,5 +1,5 @@
-#ifndef GAUSSIAN_H
-#define GAUSSIAN_H
+#ifndef APRILTAGS_GAUSSIAN_H_
+#define APRILTAGS_GAUSSIAN_H_
 
 #include <cmath>
 #include <vector>
@@ -11,15 +11,15 @@ class Gaussian {
  public:
   static bool warned;
 
-  //! Returns a Gaussian filter of size n.
-  /*! @param sigma standard deviation of the Gaussian
+  /// Returns a Gaussian filter of size n.
+  /** @param sigma standard deviation of the Gaussian
    *  @param n length of the Gaussian (must be odd)
    */
   static std::vector<float> makeGaussianFilter(float sigma, int n);
 
-  //! Convolve the input 'a' (which begins at offset aoff and is alen elements
+  /// Convolve the input 'a' (which begins at offset aoff and is alen elements
   // in length) with the filter 'f'.
-  /*! The result is deposited in 'r' at offset 'roff'. f.size() should be odd.
+  /** The result is deposited in 'r' at offset 'roff'. f.size() should be odd.
    *  The output is shifted by -f.size()/2, so that there is no net time delay.
    *  @param a input vector of pixels
    *  @param aoff
@@ -35,6 +35,6 @@ class Gaussian {
                                         unsigned int roff);
 };
 
-}  // namespace
+}  // namespace AprilTags
 
-#endif
+#endif // APRILTAGS_GAUSSIAN_H_

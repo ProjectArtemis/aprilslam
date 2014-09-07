@@ -1,5 +1,5 @@
-#ifndef SEGMENT_H
-#define SEGMENT_H
+#ifndef APRILTAGS_SEGMENT_H_
+#define APRILTAGS_SEGMENT_H_
 
 #include <cmath>
 #include <vector>
@@ -45,7 +45,7 @@ class Segment {
   //! ID of Segment.
   int getId() const { return segmentId; }
 
-  std::vector<Segment*> children;
+  std::vector<Segment *> children;
 
  private:
   float x0, y0, x1, y1;
@@ -55,6 +55,6 @@ class Segment {
   static int idCounter;
 };
 
-}  // namsepace
+}  // namsepace AprilTags
 
-#endif
+#endif  // APRILTAGS_SEGMENT_H_
