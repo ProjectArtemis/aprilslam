@@ -1,12 +1,10 @@
 <package>
-
   <name>apriltag_ros</name>
   <version>0.0.1</version>
   <description>The apriltag ros package</description>
   <maintainer email="quchao@seas.upenn.edu">Chao Qu</maintainer>
   <author>Chao Qu</author>
   <license>GPL</license>
-  <url>http://ros.org/wiki/apriltag_node</url>
 
   <buildtool_depend>catkin</buildtool_depend>
 
@@ -18,7 +16,7 @@
   <build_depend>geometry_msgs</build_depend>
   <build_depend>message_generation</build_depend>
   <build_depend>apriltag_mit</build_depend>
-  <build_depend>apriltag_umich</build_depend>
+  <build_depend>std_msgs</build_depend>
 
   <run_depend>roscpp</run_depend>
   <run_depend>image_transport</run_depend>
@@ -28,6 +26,5 @@
   <run_depend>geometry_msgs</run_depend>
   <run_depend>message_runtime</run_depend>
   <run_depend>apriltag_mit</run_depend>
-  <run_depend>apriltag_umich</run_depend>
-
+  <run_depend>std_msgs</run_depend>
 </package>

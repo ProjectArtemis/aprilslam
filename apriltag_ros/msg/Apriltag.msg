@@ -1,3 +1,8 @@
 # Apriltag
 int32 id
-float32[8] p
+string family
+float32 size
+int32 hamming_distance
+geometry_msgs/Point center
+geometry_msgs/Point[] corners
+geometry_msgs/Pose pose

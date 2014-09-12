@@ -4,42 +4,56 @@ project(apriltag_ros)
 add_definitions(-std=c++11 -Wall)
 
 find_package(catkin REQUIRED COMPONENTS
-    roscpp image_transport cv_bridge camera_info_manager
+    roscpp image_transport cv_bridge image_geometry
     sensor_msgs geometry_msgs message_generation
-    apriltag_mit apriltag_umich)
+    apriltag_mit std_msgs
+    )
 find_package(OpenCV)
 
-add_message_files(DIRECTORY msg)
-generate_messages(DEPENDENCIES std_msgs)
+add_message_files(DIRECTORY msg FILES Apriltag.msg Apriltags.msg)
+generate_messages(DEPENDENCIES std_msgs geometry_msgs)
 
 catkin_package()
 
 include_directories(
     include
     ${catkin_INCLUDE_DIRS}
-    ${OpenCV_INCLUDE_DIRS})
-
-# Apriltag node
-add_executable(${PROJECT_NAME}_node
-    src/apriltag_ros_node.cpp
-    src/tag_yaml.cpp
+    ${OpenCV_INCLUDE_DIRS}
     )
-target_link_libraries(${PROJECT_NAME}_node
+
+# apriltag_ros library
+add_library(${PROJECT_NAME}
+    src/detector/detector_node.cpp
+    )
+target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
     ${OpenCV_LIBRARIES}
-    yaml-cpp
     )
 
-add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS})
+# detector node
+add_executable(detector_node
+    src/detector/detector_main.cpp
+    )
+target_link_libraries(detector_node
+    ${PROJECT_NAME}
+    )
+
+# dependencies
+add_dependencies(${PROJECT_NAME}
+    ${catkin_EXPORTED_TARGETS}
+    ${PROJECT_NAME}_gencfg
+    ${PROJECT_NAME}_gencpp
+    ${${PROJECT_NAME}_EXPORTED_TARGETS}
+    )
 
 # Map generator
 #add_executable(generate_map
-    #src/generate_map.cpp
-    #src/tag_yaml.cpp
-    #)
+#src/generate_map.cpp
+#src/tag_yaml.cpp
+#)
 
 #target_link_libraries(generate_map
-    #${catkin_LIBRARIES}
-    #${OpenCV_LIBRARIES}
-    #yaml-cpp
-    #)
+#${catkin_LIBRARIES}
+#${OpenCV_LIBRARIES}
+#yaml-cpp
+#)

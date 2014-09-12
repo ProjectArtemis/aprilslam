@@ -1,0 +1,18 @@
+<launch>
+    <arg name="output" default="screen"/>
+    <arg name="test" default="true"/>
+    <arg name="bagfile" default="/home/chao/Workspace/bag/pennapps/apriltag1.bag"/>
+    <arg name="camera" default="/mv_25001185"/>
+
+    <!--Rosbag-->
+    <node if="$(arg test)" pkg="rosbag" type="play" name="player"
+        output="$(arg output)" args="$(arg bagfile)">
+    </node>
+
+    <!--Detector Node-->
+    <node pkg="apriltag_ros" type="detector_node" name="detector"
+        output="$(arg output)">
+        <remap from="~image_raw" to="$(arg camera)/image_raw"/>
+        <remap from="~camera_info" to="$(arg camera)/camera_info"/>
+    </node>
+</launch>
