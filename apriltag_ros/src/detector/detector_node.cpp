@@ -17,12 +17,12 @@ DetectorNode::DetectorNode(const ros::NodeHandle &nh,
     : nh_(nh),
       tag_family_(tag_family),
       tag_size_(tag_size),
+      cam_calibrated_(true),
       it_(nh),
       sub_camera_(
           it_.subscribeCamera("image_raw", 1, &DetectorNode::CameraCb, this)),
       pub_apriltags_(nh_.advertise<apriltag_ros::Apriltags>("apriltags", 1)),
-      tag_detector_(AprilTags::tagCodes36h11),
-      cam_calibrated_(true {
+      tag_detector_(AprilTags::tagCodes36h11) {
   /*
   ros::SubscriberStatusCallback connect_cb =
       boost::bind(&DetectorNode::ConnectCb, this);
