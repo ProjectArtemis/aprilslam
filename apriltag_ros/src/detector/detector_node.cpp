@@ -62,6 +62,8 @@ void DetectorNode::CameraCb(const sensor_msgs::ImageConstPtr &image_msg,
   // Process detection
   if (!detections.empty()) {
     ApriltagsPtr tags_msg(new Apriltags);
+    tags_msg->header = image_msg->header;
+    // Actual processing
     std::for_each(begin(detections), end(detections),
                   [&](const AprilTags::TagDetection &detection) {
       tags_msg->apriltags.push_back(DetectionToApriltagMsg(detection));
@@ -70,6 +72,7 @@ void DetectorNode::CameraCb(const sensor_msgs::ImageConstPtr &image_msg,
     pub_apriltags_.publish(tags_msg);
   }
 
+  // Display
   cv::imshow("image", color);
   cv::waitKey(1);
 }
