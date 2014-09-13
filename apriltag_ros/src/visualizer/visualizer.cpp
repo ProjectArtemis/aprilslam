@@ -7,7 +7,7 @@ void ApriltagVisualizer::PublishApriltagsMarker(
   static std::set<int> old_ids;
   const std::vector<Apriltag>& tags = apriltags.apriltags;
 
-  // Get current ids
+  // Get new ids
   std::set<int> new_ids;
   std::for_each(tags.begin(), tags.end(),
                 [&](const Apriltag& tag) { new_ids.insert(tag.id); });

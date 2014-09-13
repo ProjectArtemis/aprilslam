@@ -34,7 +34,7 @@ class DetectorNode {
   bool cam_calibrated_;
   image_transport::ImageTransport it_;
   image_transport::CameraSubscriber sub_camera_;
-  ros::Publisher pub_apriltags_;
+  ros::Publisher pub_tags_;
   std::mutex connect_mutex_;
   image_geometry::PinholeCameraModel model_;
   AprilTags::TagDetector tag_detector_;

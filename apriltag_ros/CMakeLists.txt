@@ -21,7 +21,9 @@ include_directories(
 
 # apriltag_ros library
 add_library(${PROJECT_NAME}
+    src/visualizer/visualizer.cpp
     src/detector/detector_node.cpp
+    src/mapper/mapper_node.cpp
     )
 target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
@@ -30,9 +32,15 @@ target_link_libraries(${PROJECT_NAME}
 # detector node
 add_executable(detector_node
     src/detector/detector_main.cpp
-    src/visualizer/visualizer.cpp
     )
 target_link_libraries(detector_node
+    ${PROJECT_NAME}
+    )
+
+add_executable(mapper_node
+    src/mapper/mapper_main.cpp
+    )
+target_link_libraries(mapper_node
     ${PROJECT_NAME}
     )
 

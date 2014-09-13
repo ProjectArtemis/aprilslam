@@ -21,7 +21,7 @@ DetectorNode::DetectorNode(const ros::NodeHandle &nh,
       it_(nh),
       sub_camera_(
           it_.subscribeCamera("image_raw", 1, &DetectorNode::CameraCb, this)),
-      pub_apriltags_(nh_.advertise<apriltag_ros::Apriltags>("apriltags", 1)),
+      pub_tags_(nh_.advertise<apriltag_ros::Apriltags>("apriltags", 1)),
       tag_detector_(AprilTags::tagCodes36h11),
       tag_viz_(nh) {
   /*
@@ -34,7 +34,7 @@ DetectorNode::DetectorNode(const ros::NodeHandle &nh,
 
 void DetectorNode::ConnectCb() {
   std::lock_guard<std::mutex> lock(connect_mutex_);
-  if (!pub_apriltags_.getNumSubscribers())
+  if (!pub_tags_.getNumSubscribers())
     sub_camera_.shutdown();
   else if (!sub_camera_) {
     image_transport::TransportHints hints("raw", ros::TransportHints(), nh_);
@@ -74,7 +74,7 @@ void DetectorNode::CameraCb(const sensor_msgs::ImageConstPtr &image_msg,
       detection.draw(color);
     });
     tag_viz_.PublishApriltagsMarker(*tags_msg);
-    pub_apriltags_.publish(tags_msg);
+    pub_tags_.publish(tags_msg);
   }
 
   // Display
