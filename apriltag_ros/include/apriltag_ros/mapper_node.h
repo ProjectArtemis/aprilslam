@@ -18,5 +18,7 @@ class MapperNode {
   ros::NodeHandle nh_;
   ros::Subscriber sub_tags_;
 };
-}
+
+}  // namespace apriltag_ros
+
 #endif  // APRILTAG_ROS_MAPPER_NODE_H_

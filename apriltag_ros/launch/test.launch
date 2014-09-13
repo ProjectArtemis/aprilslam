@@ -5,6 +5,11 @@
     <arg name="camera" default="/mv_25001185"/>
     <arg name="ns" default="apriltag"/>
 
+    <include unless="$(arg test)" file="$(find bluefox2)/launch/single_node.launch">
+        <arg name="serial" value="25001185"/>
+        <arg name="binning" value="true"/>
+    </include>
+
     <!--Rosbag-->
     <node if="$(arg test)" pkg="rosbag" type="play" name="player"
         output="log" args="-l $(arg bagfile)">
