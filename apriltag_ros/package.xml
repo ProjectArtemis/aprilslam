@@ -16,6 +16,7 @@
   <build_depend>geometry_msgs</build_depend>
   <build_depend>message_generation</build_depend>
   <build_depend>apriltag_mit</build_depend>
+  <build_depend>rviz_helper</build_depend>
 
   <run_depend>roscpp</run_depend>
   <run_depend>image_transport</run_depend>
@@ -25,4 +26,5 @@
   <run_depend>geometry_msgs</run_depend>
   <run_depend>message_runtime</run_depend>
   <run_depend>apriltag_mit</run_depend>
+  <run_depend>rviz_helper</run_depend>
 </package>

@@ -4,8 +4,6 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Global Options1
-        - /MarkerArray1
         - /MarkerArray1/Status1
         - /MarkerArray1/Namespaces1
       Splitter Ratio: 0.5
@@ -58,6 +56,27 @@ Visualization Manager:
         36h11: true
       Queue Size: 100
       Value: true
+    - Class: rviz/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+      Marker Scale: 1
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        {}
+      Update Interval: 0
+      Value: true
+    - Class: rviz/Axes
+      Enabled: true
+      Length: 1
+      Name: Axes
+      Radius: 0.05
+      Reference Frame: <Fixed Frame>
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -94,10 +113,10 @@ Visualization Manager:
         Z: 0
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.594796
+      Pitch: 1.1152
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.8285
+      Yaw: 4.46849
     Saved: ~
 Window Geometry:
   Displays:

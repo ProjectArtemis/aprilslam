@@ -7,7 +7,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 find_package(catkin REQUIRED COMPONENTS
     roscpp image_transport cv_bridge image_geometry
     sensor_msgs geometry_msgs message_generation
-    apriltag_mit std_msgs
+    apriltag_mit std_msgs rviz_helper
     )
 find_package(gtsam)
 
