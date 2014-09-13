@@ -12,6 +12,8 @@
 
 #include <AprilTags/TagDetector.h>
 
+#include "apriltag_ros/visualizer/visualizer.h"
+
 namespace apriltag_ros {
 
 class DetectorNode {
@@ -36,6 +38,7 @@ class DetectorNode {
   std::mutex connect_mutex_;
   image_geometry::PinholeCameraModel model_;
   AprilTags::TagDetector tag_detector_;
+  apriltag_ros::ApriltagVisualizer tag_viz_;
 };
 
 }  // namespace apriltag_ros

@@ -6,7 +6,7 @@
 
     <!--Rosbag-->
     <node if="$(arg test)" pkg="rosbag" type="play" name="player"
-        output="$(arg output)" args="$(arg bagfile)">
+        output="log" args="-l $(arg bagfile)">
     </node>
 
     <!--Detector Node-->

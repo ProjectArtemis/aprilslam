@@ -30,6 +30,7 @@ target_link_libraries(${PROJECT_NAME}
 # detector node
 add_executable(detector_node
     src/detector/detector_main.cpp
+    src/visualizer/visualizer.cpp
     )
 target_link_libraries(detector_node
     ${PROJECT_NAME}

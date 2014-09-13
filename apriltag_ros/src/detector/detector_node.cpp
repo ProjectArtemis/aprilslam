@@ -22,7 +22,8 @@ DetectorNode::DetectorNode(const ros::NodeHandle &nh,
       sub_camera_(
           it_.subscribeCamera("image_raw", 1, &DetectorNode::CameraCb, this)),
       pub_apriltags_(nh_.advertise<apriltag_ros::Apriltags>("apriltags", 1)),
-      tag_detector_(AprilTags::tagCodes36h11) {
+      tag_detector_(AprilTags::tagCodes36h11),
+      tag_viz_(nh) {
   /*
   ros::SubscriberStatusCallback connect_cb =
       boost::bind(&DetectorNode::ConnectCb, this);
@@ -72,6 +73,7 @@ void DetectorNode::CameraCb(const sensor_msgs::ImageConstPtr &image_msg,
       tags_msg->apriltags.push_back(DetectionToApriltagMsg(detection));
       detection.draw(color);
     });
+    tag_viz_.PublishApriltagsMarker(*tags_msg);
     pub_apriltags_.publish(tags_msg);
   }
 
