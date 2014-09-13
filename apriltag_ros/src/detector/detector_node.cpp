@@ -24,12 +24,15 @@ DetectorNode::DetectorNode(const ros::NodeHandle &nh,
       pub_tags_(nh_.advertise<apriltag_ros::Apriltags>("apriltags", 1)),
       tag_detector_(AprilTags::tagCodes36h11),
       tag_viz_(nh) {
+  // Do nothing if nobody subscribes
   /*
   ros::SubscriberStatusCallback connect_cb =
       boost::bind(&DetectorNode::ConnectCb, this);
   pub_apriltags_ = nh_.advertise<apriltag_ros::Apriltags>(
       "apriltags", 1, connect_cb, connect_cb);
   */
+  tag_viz_.set_colorRGB(colors::RED);
+  tag_viz_.set_alpha(0.5);
 }
 
 void DetectorNode::ConnectCb() {
@@ -67,7 +70,7 @@ void DetectorNode::CameraCb(const sensor_msgs::ImageConstPtr &image_msg,
 
   // Process detection
   if (!detections.empty()) {
-
+    // Maybe use Ptr?
     Apriltags tags_msg;
     tags_msg.header = image_msg->header;
     // Actual processing

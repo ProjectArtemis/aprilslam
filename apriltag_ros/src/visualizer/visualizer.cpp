@@ -33,8 +33,7 @@ void ApriltagVisualizer::PublishApriltagsMarker(
     marker.action = visualization_msgs::Marker::ADD;
     marker.scale.x = marker.scale.y = tag.size;
     marker.scale.z = marker.scale.x / 10;
-    marker.color.r = 1;
-    marker.color.a = 0.75;
+    marker.color = color_;
     marker.pose = tag.pose;
     marker_array.markers.push_back(marker);
   }

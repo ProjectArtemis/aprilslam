@@ -19,16 +19,19 @@ catkin_package()
 include_directories(
     include
     ${catkin_INCLUDE_DIRS}
+    ${GTSAM_INCLUDE_DIRS}
     )
 
 # apriltag_ros library
 add_library(${PROJECT_NAME}
+    src/mapper/mapper.cpp
     src/visualizer/visualizer.cpp
     src/detector/detector_node.cpp
     src/mapper/mapper_node.cpp
     )
 target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
+    ${GTSAM_LIBRARIES}
     )
 
 # detector node
