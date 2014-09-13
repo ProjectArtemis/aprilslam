@@ -6,9 +6,11 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /MarkerArray1/Status1
         - /MarkerArray1/Namespaces1
-        - /TF1
+        - /TF1/Frames1
+        - /TF1/Tree1
+        - /Axes1
+        - /Marker1
       Splitter Ratio: 0.5
     Tree Height: 696
   - Class: rviz/Selection
@@ -49,7 +51,7 @@ Visualization Manager:
         Z: 0
       Plane: XY
       Plane Cell Count: 10
-      Reference Frame: mv_25001185
+      Reference Frame: world
       Value: true
     - Class: rviz/MarkerArray
       Enabled: true
@@ -64,13 +66,19 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
+        mv_25001185:
+          Value: true
+        world:
+          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        {}
+        world:
+          mv_25001185:
+            {}
       Update Interval: 0
       Value: true
     - Class: rviz/Axes
@@ -80,10 +88,18 @@ Visualization Manager:
       Radius: 0.05
       Reference Frame: <Fixed Frame>
       Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /apriltag/traj
+      Name: Marker
+      Namespaces:
+        "": true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: mv_25001185
+    Fixed Frame: world
     Frame Rate: 30
   Name: root
   Tools:
@@ -104,7 +120,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 7.46319
+      Distance: 3.93856
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
@@ -116,10 +132,10 @@ Visualization Manager:
         Z: 0
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: -0.184799
+      Pitch: 1.0002
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.9185
+      Yaw: 4.66852
     Saved: ~
 Window Geometry:
   Displays:

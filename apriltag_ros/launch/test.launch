@@ -30,4 +30,9 @@
         <arg name="camera" value="$(arg camera)"/>
         <arg name="ns" value="$(arg ns)"/>
     </include>
+
+    <!--Rviz-->
+    <node name="rviz" pkg="rviz" type="rviz"
+        args="--display-config $(find apriltag_ros)/config/apriltag.rviz">
+    </node>
 </launch>

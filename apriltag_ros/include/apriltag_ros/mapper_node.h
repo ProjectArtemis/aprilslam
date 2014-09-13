@@ -24,6 +24,7 @@ class MapperNode {
         pose_viz_(nh, "traj") {
     pose_viz_.set_color(rviz_helper::colors::MAGENTA);
     pose_viz_.set_alpha(1);
+    pose_viz_.set_scale(0.01);
   }
 
  private:
@@ -36,7 +37,7 @@ class MapperNode {
   std::string frame_id_;      ///< frame id should be world
   apriltag_ros::TagMap map_;  ///< map will be in world frame
   apriltag_ros::Mapper mapper_;
-  rviz_helper::Pose3Visualizer pose_viz_;
+  rviz_helper::PoseVisualizer pose_viz_;
   image_geometry::PinholeCameraModel model_;
 };
 

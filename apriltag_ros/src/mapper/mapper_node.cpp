@@ -33,6 +33,7 @@ void MapperNode::TagsCb(const apriltag_ros::ApriltagsConstPtr& tags_msg) {
     ROS_WARN_THROTTLE(1, "No 2D-3D correspondence.");
     return;
   }
+  pose_viz_.PublishPose(pose, frame_id_, tags_msg->header.stamp);
   /*
   mapper_.AddPose();
   mapper_.AddLandmarks();
