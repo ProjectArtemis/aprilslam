@@ -6,7 +6,7 @@ int main(int argc, char **argv) {
 
   try {
     // Hard code tag size now
-    apriltag_ros::MapperNode mapper_node(nh);
+    apriltag_ros::MapperNode mapper_node(nh, "world");
     ros::spin();
   }
   catch (const std::exception &e) {

@@ -4,8 +4,11 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /Global Options1
+        - /Status1
         - /MarkerArray1/Status1
         - /MarkerArray1/Namespaces1
+        - /TF1
       Splitter Ratio: 0.5
     Tree Height: 696
   - Class: rviz/Selection
@@ -113,10 +116,10 @@ Visualization Manager:
         Z: 0
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 1.1152
+      Pitch: 0.275201
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.46849
+      Yaw: 4.7685
     Saved: ~
 Window Geometry:
   Displays:

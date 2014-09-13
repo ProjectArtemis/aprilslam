@@ -25,6 +25,8 @@ include_directories(
 # apriltag_ros library
 add_library(${PROJECT_NAME}
     src/mapper/mapper.cpp
+    src/mapper/tag_map.cpp
+    src/utils/utils.cpp
     src/visualizer/visualizer.cpp
     src/detector/detector_node.cpp
     src/mapper/mapper_node.cpp

@@ -4,6 +4,8 @@
     <arg name="bagfile" default="/home/chao/Workspace/bag/pennapps/apriltag4.bag"/>
     <arg name="camera" default="/mv_25001185"/>
     <arg name="ns" default="apriltag"/>
+    <arg name="detector" default="true"/>
+    <arg name="mapper" default="true"/>
 
     <include unless="$(arg test)" file="$(find bluefox2)/launch/single_node.launch">
         <arg name="serial" value="25001185"/>
@@ -16,13 +18,15 @@
     </node>
 
     <!--Detector Node-->
-    <include file="$(find apriltag_ros)/launch/detector.launch">
+    <include if="$(arg detector)"
+        file="$(find apriltag_ros)/launch/detector.launch">
         <arg name="camera" value="$(arg camera)"/>
         <arg name="ns" value="$(arg ns)"/>
     </include>
 
     <!-- Mapper Node -->
-    <include file="$(find apriltag_ros)/launch/mapper.launch">
+    <include if="$(arg mapper)"
+        file="$(find apriltag_ros)/launch/mapper.launch">
         <arg name="camera" value="$(arg camera)"/>
         <arg name="ns" value="$(arg ns)"/>
     </include>
