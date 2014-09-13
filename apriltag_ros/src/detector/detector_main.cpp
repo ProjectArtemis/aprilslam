@@ -1,4 +1,4 @@
-#include "apriltag_ros/detector/detector_node.h"
+#include "apriltag_ros/detector_node.h"
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "detector");

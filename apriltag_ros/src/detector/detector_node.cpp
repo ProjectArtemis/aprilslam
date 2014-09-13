@@ -1,4 +1,4 @@
-#include "apriltag_ros/detector/detector_node.h"
+#include "apriltag_ros/detector_node.h"
 
 #include <thread>
 

@@ -12,7 +12,7 @@
 
 #include <AprilTags/TagDetector.h>
 
-#include "apriltag_ros/visualizer/visualizer.h"
+#include "apriltag_ros/visualizer.h"
 
 namespace apriltag_ros {
 

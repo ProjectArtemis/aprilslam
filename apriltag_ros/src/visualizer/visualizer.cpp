@@ -1,4 +1,4 @@
-#include "apriltag_ros/visualizer/visualizer.h"
+#include "apriltag_ros/visualizer.h"
 
 namespace apriltag_ros {
 
@@ -33,7 +33,7 @@ void ApriltagVisualizer::PublishApriltagsMarker(
     marker.action = visualization_msgs::Marker::ADD;
     marker.scale.x = marker.scale.y = tag.size;
     marker.scale.z = marker.scale.x / 10;
-    marker.color.r = marker.color.a = 0.5;
+    marker.color.r = marker.color.a = 1;
     marker.pose = tag.pose;
     marker_array.markers.push_back(marker);
   }
