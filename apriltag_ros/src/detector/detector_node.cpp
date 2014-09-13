@@ -97,7 +97,8 @@ Apriltag DetectorNode::DetectionToApriltagMsg(
     point.y = corner.second;
     tag.corners.push_back(point);
   });
-  // Get rotation and translation of tag in camera frame
+  if (!cam_calibrated_) return tag;
+  // Get rotation and translation of tag in camera frame, only if we have cinfo!
   Eigen::Quaterniond q;
   Eigen::Vector3d t;
   detection.getRelativeQT(tag_size_, model_.fullIntrinsicMatrix(),
