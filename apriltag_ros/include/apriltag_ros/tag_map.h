@@ -3,6 +3,7 @@
 
 #include <apriltag_ros/Apriltags.h>
 #include <opencv2/core/core.hpp>
+#include <set>
 
 namespace apriltag_ros {
 
@@ -13,6 +14,8 @@ class TagMap {
   }
 
   bool AddFirstTag(const Apriltags& tags, int width, int height);
+  bool EstimatePose(const Apriltags& tags, const cv::Matx33d& K,
+                    const cv::Mat_<double>& D, geometry_msgs::Pose* pose) const;
 
   bool init() const { return first_tag_id_ >= 0; }
   int first_tag_id() const { return first_tag_id_; }

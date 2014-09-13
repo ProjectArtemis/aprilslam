@@ -1,4 +1,5 @@
 #include "apriltag_ros/detector_node.h"
+#include "apriltag_ros/utils.h"
 
 #include <thread>
 
@@ -107,18 +108,12 @@ Apriltag DetectorNode::DetectionToApriltagMsg(
   });
   if (!cam_calibrated_) return tag;
   // Get rotation and translation of tag in camera frame, only if we have cinfo!
-  Eigen::Quaterniond q;
-  Eigen::Vector3d t;
+  Eigen::Quaterniond c_Q_b;
+  Eigen::Vector3d c_T_b;
   /// @todo: Need to decide whether to undistort points here!
   detection.getRelativeQT(tag_size_, model_.fullIntrinsicMatrix(),
-                          model_.distortionCoeffs(), q, t);
-  tag.pose.position.x = t(0);
-  tag.pose.position.y = t(1);
-  tag.pose.position.z = t(2);
-  tag.pose.orientation.w = q.w();
-  tag.pose.orientation.x = q.x();
-  tag.pose.orientation.y = q.y();
-  tag.pose.orientation.z = q.z();
+                          model_.distortionCoeffs(), c_Q_b, c_T_b);
+  SetPose(&tag.pose, c_Q_b, c_T_b);
   return tag;
 }
 

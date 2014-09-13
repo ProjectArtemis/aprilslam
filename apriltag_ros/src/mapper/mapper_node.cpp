@@ -26,7 +26,13 @@ void MapperNode::TagsCb(const apriltag_ros::ApriltagsConstPtr& tags_msg) {
     }
     ROS_INFO("TagMap initialized.");
   }
-
+  // Again don't do anything if no pose can be estimated
+  geometry_msgs::Pose pose;
+  if (!map_.EstimatePose(*tags_msg, model_.fullIntrinsicMatrix(),
+                         model_.distortionCoeffs(), &pose)) {
+    ROS_WARN_THROTTLE(1, "No 2D-3D correspondence.");
+    return;
+  }
   /*
   mapper_.AddPose();
   mapper_.AddLandmarks();
