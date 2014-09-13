@@ -5,7 +5,8 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh("~");
 
   try {
-    apriltag_ros::DetectorNode detector_node(nh);
+    // Hard code tag size now
+    apriltag_ros::DetectorNode detector_node(nh, "36h11", 0.159);
     ros::spin();
   }
   catch (const std::exception &e) {

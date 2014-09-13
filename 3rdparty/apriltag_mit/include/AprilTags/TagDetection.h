@@ -10,6 +10,8 @@
 
 namespace AprilTags {
 
+using Pointf = std::pair<float, float>;
+
 struct TagDetection {
 
   //! Constructor
@@ -99,6 +101,16 @@ struct TagDetection {
   //! Draw the detection within the supplied image, including boarders and tag
   // ID.
   void draw(cv::Mat& image) const;
+
+  //! Better version
+  Eigen::Matrix4d getRelativeH(double tag_size, const cv::Matx33d& K,
+                               const cv::Mat_<double>& D) const;
+  void getRelativeQT(double tag_size, const cv::Matx33d& K,
+                     const cv::Mat_<double>& D, Eigen::Quaterniond& quat,
+                     Eigen::Vector3d& trans) const;
+  void getRelativeRT(double tag_size, const cv::Matx33d& K,
+                     const cv::Mat_<double>& D, cv::Mat& rvec,
+                     cv::Mat& tvec) const;
 };
 
 }  // namespace AprilTags

@@ -12,14 +12,17 @@
 
 namespace apriltag_ros {
 
-DetectorNode::DetectorNode(const ros::NodeHandle &nh)
+DetectorNode::DetectorNode(const ros::NodeHandle &nh,
+                           const std::string &tag_family, double tag_size)
     : nh_(nh),
+      tag_family_(tag_family),
+      tag_size_(tag_size),
       it_(nh),
       sub_camera_(
           it_.subscribeCamera("image_raw", 1, &DetectorNode::CameraCb, this)),
       pub_apriltags_(nh_.advertise<apriltag_ros::Apriltags>("apriltags", 1)),
       tag_detector_(AprilTags::tagCodes36h11),
-      cam_calibrated_(true) {
+      cam_calibrated_(true {
   /*
   ros::SubscriberStatusCallback connect_cb =
       boost::bind(&DetectorNode::ConnectCb, this);
@@ -77,20 +80,35 @@ void DetectorNode::CameraCb(const sensor_msgs::ImageConstPtr &image_msg,
   cv::waitKey(1);
 }
 
-Apriltag DetectionToApriltagMsg(const AprilTags::TagDetection &detection) {
+Apriltag DetectorNode::DetectionToApriltagMsg(
+    const AprilTags::TagDetection &detection) {
   Apriltag tag;
+  // Gather basic information
   tag.id = detection.id;
-  tag.family = std::string("36h11");
+  tag.family = tag_family_;
   tag.hamming_distance = detection.hammingDistance;
   tag.center.x = detection.cxy.first;
   tag.center.y = detection.cxy.second;
+  tag.size = tag_size_;
   std::for_each(begin(detection.p), end(detection.p),
-                [&](const std::pair<float, float> &corner) {
+                [&](const AprilTags::Pointf &corner) {
     geometry_msgs::Point point;
     point.x = corner.first;
     point.y = corner.second;
     tag.corners.push_back(point);
   });
+  // Get rotation and translation of tag in camera frame
+  Eigen::Quaterniond q;
+  Eigen::Vector3d t;
+  detection.getRelativeQT(tag_size_, model_.fullIntrinsicMatrix(),
+                          model_.distortionCoeffs(), q, t);
+  tag.pose.position.x = t(0);
+  tag.pose.position.y = t(1);
+  tag.pose.position.z = t(2);
+  tag.pose.orientation.w = q.w();
+  tag.pose.orientation.x = q.x();
+  tag.pose.orientation.y = q.y();
+  tag.pose.orientation.z = q.z();
   return tag;
 }
 

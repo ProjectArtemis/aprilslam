@@ -16,24 +16,28 @@ namespace apriltag_ros {
 
 class DetectorNode {
  public:
-  DetectorNode(const ros::NodeHandle &nh);
+  DetectorNode(const ros::NodeHandle &nh, const std::string &tag_family_,
+               double tag_size);
 
  private:
   void ConnectCb();
   void CameraCb(const sensor_msgs::ImageConstPtr &image_msg,
                 const sensor_msgs::CameraInfoConstPtr &cinfo_msg);
+  apriltag_ros::Apriltag DetectionToApriltagMsg(
+      const AprilTags::TagDetection &detection);
 
   ros::NodeHandle nh_;
+  std::string tag_family_;
+  double tag_size_;
+  bool cam_calibrated_;
   image_transport::ImageTransport it_;
   image_transport::CameraSubscriber sub_camera_;
   ros::Publisher pub_apriltags_;
   std::mutex connect_mutex_;
   image_geometry::PinholeCameraModel model_;
   AprilTags::TagDetector tag_detector_;
-  bool cam_calibrated_;
 };
 
-apriltag_ros::Apriltag DetectionToApriltagMsg(
-    const AprilTags::TagDetection &detection);
-}
+}  // namespace apriltag_ros
+
 #endif  // APRILTAG_ROS_DETECTOR_NODE_H_
