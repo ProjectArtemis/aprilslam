@@ -56,6 +56,8 @@ void DetectorNode::CameraCb(const sensor_msgs::ImageConstPtr &image_msg,
   model_.fromCameraInfo(cinfo_msg);
   cv::Mat image = cv_bridge::toCvCopy(
                       image_msg, sensor_msgs::image_encodings::MONO8)->image;
+
+  // Disable drawing later
   cv::Mat color;
   cv::cvtColor(image, color, CV_GRAY2BGR);
 
@@ -65,15 +67,16 @@ void DetectorNode::CameraCb(const sensor_msgs::ImageConstPtr &image_msg,
 
   // Process detection
   if (!detections.empty()) {
-    ApriltagsPtr tags_msg(new Apriltags);
-    tags_msg->header = image_msg->header;
+
+    Apriltags tags_msg;
+    tags_msg.header = image_msg->header;
     // Actual processing
     std::for_each(begin(detections), end(detections),
                   [&](const AprilTags::TagDetection &detection) {
-      tags_msg->apriltags.push_back(DetectionToApriltagMsg(detection));
-      detection.draw(color);
+      tags_msg.apriltags.push_back(DetectionToApriltagMsg(detection));
+      detection.draw(color);  // Disable drawing later
     });
-    tag_viz_.PublishApriltagsMarker(*tags_msg);
+    tag_viz_.PublishApriltagsMarker(tags_msg);
     pub_tags_.publish(tags_msg);
   }
 
@@ -103,6 +106,7 @@ Apriltag DetectorNode::DetectionToApriltagMsg(
   // Get rotation and translation of tag in camera frame, only if we have cinfo!
   Eigen::Quaterniond q;
   Eigen::Vector3d t;
+  /// @todo: Need to decide whether to undistort points here!
   detection.getRelativeQT(tag_size_, model_.fullIntrinsicMatrix(),
                           model_.distortionCoeffs(), q, t);
   tag.pose.position.x = t(0);

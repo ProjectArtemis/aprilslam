@@ -6,6 +6,10 @@
 
 namespace apriltag_ros {
 
+class Tagmap {
+
+};
+
 class MapperNode {
  public:
   MapperNode(const ros::NodeHandle& nh)
