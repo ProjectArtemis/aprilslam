@@ -39,9 +39,9 @@ void MapperNode::TagsCb(const apriltag_ros::ApriltagsConstPtr& tags_msg) {
   if (mapper_.init()) {
     // This will only add new landmarks
     mapper_.AddLandmarks(*tags_msg);
-    mapper_.Update();
+    mapper_.Optimize();
     // Get latest estimates from mapper and put into map
-
+    mapper_.Update(&map_, &pose);
     // Prepare for next iteration
     mapper_.Clear();
   } else {

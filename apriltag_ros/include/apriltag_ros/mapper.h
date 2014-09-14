@@ -9,6 +9,7 @@
 
 #include <geometry_msgs/Pose.h>
 #include <apriltag_ros/Apriltags.h>
+#include "apriltag_ros/tag_map.h"
 
 namespace apriltag_ros {
 
@@ -20,7 +21,8 @@ class Mapper {
   Mapper(double relinearize_thresh, int relinearize_skip);
 
   bool init() const { return init_; }
-  void Update(int num_iterations = 1);
+  void Optimize(int num_iterations = 1);
+  void Update(apriltag_ros::TagMap* map, geometry_msgs::Pose* pose) const;
   void AddPose(const geometry_msgs::Pose& pose);
   void AddFactors(const apriltag_ros::Apriltags& tags);
   void AddLandmarks(const apriltag_ros::Apriltags& tags);

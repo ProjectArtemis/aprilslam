@@ -1,4 +1,5 @@
 #include "apriltag_ros/mapper.h"
+#include "apriltag_ros/utils.h"
 #include <gtsam/slam/PriorFactor.h>
 #include <ros/ros.h>
 
@@ -65,13 +66,22 @@ void Mapper::AddFactors(const Apriltags &tags) {
   }
 }
 
-void Mapper::Update(int num_iterations) {
+void Mapper::Optimize(int num_iterations) {
   isam2_.update(graph_, initial_estimates_);
   if (num_iterations > 1) {
     for (int i = 1; i < num_iterations; ++i) {
       isam2_.update();
     }
   }
+}
+
+void Mapper::Update(TagMap *map, geometry_msgs::Pose *pose) const {
+  Values results = isam2_.calculateEstimate();
+  // Update the current pose
+  const Pose3 &pose3 = results.at<Pose3>(Symbol('x', pose_cnt));
+  SetPosition(&pose->position, pose3.x(), pose3.y(), pose3.z());
+  SetOrientation(&pose->orientation, pose3.rotation().toQuaternion());
+  // Update the current map
 }
 
 void Mapper::Clear() {
