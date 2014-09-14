@@ -7,7 +7,7 @@ namespace apriltag_ros {
 
 void TagMap::AddOrUpdate(const Apriltag &tag_w,
                          const geometry_msgs::Pose &pose) {
-  auto it = FindById(tag_w.id, tags_w_msg_.apriltags);
+  auto it = FindById(tag_w.id, tags_w_);
   if (it == tags_w().end()) {
     // Not in map, add to map
     AddTag(tag_w, pose);
@@ -26,26 +26,16 @@ void TagMap::UpdateTag(Apriltag *tag_w, const geometry_msgs::Pose &pose) {
 void TagMap::AddTag(const Apriltag &tag, const geometry_msgs::Pose &pose) {
   Apriltag tag_w = tag;
   UpdateTag(&tag_w, pose);
-  tags_w_msg_.apriltags.push_back(tag_w);
+  tags_w_.push_back(tag_w);
   ROS_INFO("tag %d added to map", tag.id);
 }
 
-bool TagMap::AddFirstTag(const Apriltags &tags_c, int width, int height) {
-  for (const Apriltag &tag_c : tags_c.apriltags) {
-    if (IsInsideImageCenter(tag_c.center.x, tag_c.center.y, width, height, 3)) {
-      // This magic number 3 means the border is 1/3 of the size
-      tags_w_msg_.header.stamp = tags_c.header.stamp;
-      // Creat tag in world frame and set to origin
-      // Set the first tag to origin
-      geometry_msgs::Pose pose;
-      SetPose(&pose);
-      AddTag(tag_c, pose);
-      ROS_INFO("tag %d: %f, %f", tag_c.id, tag_c.center.x, tag_c.center.y);
-      return true;
-    }
-  }
-  // No good tag detected around the center of image
-  return false;
+void TagMap::AddFirstTag(const Apriltag &tag_c) {
+  // Creat tag in world frame and set to origin
+  // Set the first tag to origin
+  geometry_msgs::Pose pose;
+  SetPose(&pose);
+  AddTag(tag_c, pose);
 }
 
 bool TagMap::EstimatePose(const std::vector<Apriltag> &tags_c,
