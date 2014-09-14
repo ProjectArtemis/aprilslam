@@ -15,8 +15,8 @@ class ApriltagVisualizer {
  public:
   ApriltagVisualizer(const ros::NodeHandle& nh, const std::string& topic)
       : nh_(nh),
-        pub_markers_(nh_.advertise<visualization_msgs::MarkerArray>(
-            topic, 1)) {}
+        pub_markers_(nh_.advertise<visualization_msgs::MarkerArray>(topic, 1)) {
+  }
 
   void set_color(const rviz::Color& color) {
     color_.r = color.r_;
@@ -26,6 +26,9 @@ class ApriltagVisualizer {
   void set_alpha(double alpha) { color_.a = alpha; }
 
   void PublishApriltagsMarker(const apriltag_ros::Apriltags& apriltags);
+  void PublishApriltagsMarker(const std::vector<apriltag_ros::Apriltag>& tags,
+                              const std::string& frame_id,
+                              const ros::Time& stamp);
 
  private:
   ros::NodeHandle nh_;

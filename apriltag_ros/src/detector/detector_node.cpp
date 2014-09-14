@@ -72,16 +72,16 @@ void DetectorNode::CameraCb(const sensor_msgs::ImageConstPtr &image_msg,
   // Process detection
   if (!detections.empty()) {
     // Maybe use Ptr?
-    Apriltags tags_msg;
-    tags_msg.header = image_msg->header;
+    Apriltags tags_c_msg;
+    tags_c_msg.header = image_msg->header;
     // Actual processing
     std::for_each(begin(detections), end(detections),
                   [&](const AprilTags::TagDetection &detection) {
-      tags_msg.apriltags.push_back(DetectionToApriltagMsg(detection));
+      tags_c_msg.apriltags.push_back(DetectionToApriltagMsg(detection));
       detection.draw(color);  // Disable drawing later
     });
-    tag_viz_.PublishApriltagsMarker(tags_msg);
-    pub_tags_.publish(tags_msg);
+    tag_viz_.PublishApriltagsMarker(tags_c_msg);
+    pub_tags_.publish(tags_c_msg);
   }
 
   // Display

@@ -2,9 +2,9 @@
 
 namespace apriltag_ros {
 
-void MapperNode::TagsCb(const apriltag_ros::ApriltagsConstPtr& tags_msg) {
+void MapperNode::TagsCb(const apriltag_ros::ApriltagsConstPtr& tags_c_msg) {
   // Do nothing if no detection, this prevents checking in the following steps
-  if (tags_msg->apriltags.empty()) {
+  if (tags_c_msg->apriltags.empty()) {
     ROS_WARN_THROTTLE(1, "No tags detected.");
     return;
   }
@@ -15,12 +15,12 @@ void MapperNode::TagsCb(const apriltag_ros::ApriltagsConstPtr& tags_msg) {
   }
   // Set child frame id for tf to be the same as camera frame id
   if (pose_viz_.child_frame_id().empty()) {
-    pose_viz_.set_child_frame_id(tags_msg->header.frame_id);
+    pose_viz_.set_child_frame_id(tags_c_msg->header.frame_id);
     ROS_INFO("Set child frame id to: %s.", pose_viz_.child_frame_id().c_str());
   }
   // Initialize map by adding the first tag that is not on the edge of the image
   if (!map_.init()) {
-    if (!map_.AddFirstTag(*tags_msg, model_.cameraInfo().width,
+    if (!map_.AddFirstTag(*tags_c_msg, model_.cameraInfo().width,
                           model_.cameraInfo().height)) {
       return;
     }
@@ -28,17 +28,17 @@ void MapperNode::TagsCb(const apriltag_ros::ApriltagsConstPtr& tags_msg) {
   }
   // Do nothing if no pose can be estimated
   geometry_msgs::Pose pose;
-  if (!map_.EstimatePose(tags_msg->apriltags, model_.fullIntrinsicMatrix(),
+  if (!map_.EstimatePose(tags_c_msg->apriltags, model_.fullIntrinsicMatrix(),
                          model_.distortionCoeffs(), &pose)) {
     ROS_WARN_THROTTLE(1, "No 2D-3D correspondence.");
     return;
   }
   // Now that with the initial pose calculated, we can do some mapping
   mapper_.AddPose(pose);
-  mapper_.AddFactors(tags_msg->apriltags);
+  mapper_.AddFactors(tags_c_msg->apriltags);
   if (mapper_.init()) {
     // This will only add new landmarks
-    mapper_.AddLandmarks(tags_msg->apriltags);
+    mapper_.AddLandmarks(tags_c_msg->apriltags);
     mapper_.Optimize();
     // Get latest estimates from mapper and put into map
     mapper_.Update(&map_, &pose);
@@ -50,7 +50,7 @@ void MapperNode::TagsCb(const apriltag_ros::ApriltagsConstPtr& tags_msg) {
     mapper_.Initialize(map_.first_tag());
   }
   // Publish updated pose and map
-  pose_viz_.PublishPose(pose, frame_id_, tags_msg->header.stamp);
+  pose_viz_.PublishPose(pose, frame_id_, tags_c_msg->header.stamp);
   tag_viz_.PublishApriltagsMarker(map_.ToMsg());
 }
 

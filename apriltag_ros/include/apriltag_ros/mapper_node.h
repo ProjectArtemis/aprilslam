@@ -32,7 +32,7 @@ class MapperNode {
   }
 
  private:
-  void TagsCb(const apriltag_ros::ApriltagsConstPtr& tags_msg);
+  void TagsCb(const apriltag_ros::ApriltagsConstPtr& tags_c_msg);
   void CinfoCb(const sensor_msgs::CameraInfoConstPtr& cinfo_msg);
 
   ros::NodeHandle nh_;

@@ -4,8 +4,14 @@ namespace apriltag_ros {
 
 void ApriltagVisualizer::PublishApriltagsMarker(
     const apriltag_ros::Apriltags& apriltags) {
+  PublishApriltagsMarker(apriltags.apriltags, apriltags.header.frame_id,
+                         apriltags.header.stamp);
+}
+
+void ApriltagVisualizer::PublishApriltagsMarker(
+    const std::vector<Apriltag>& tags, const std::string& frame_id,
+    const ros::Time& stamp) {
   static std::set<int> old_ids;
-  const std::vector<Apriltag>& tags = apriltags.apriltags;
 
   // Get new ids
   std::set<int> new_ids;
@@ -24,9 +30,10 @@ void ApriltagVisualizer::PublishApriltagsMarker(
 
   // Add and delete markers
   visualization_msgs::MarkerArray marker_array;
-  for (const apriltag_ros::Apriltag& tag : apriltags.apriltags) {
+  for (const apriltag_ros::Apriltag& tag : tags) {
     visualization_msgs::Marker marker;
-    marker.header = apriltags.header;
+    marker.header.frame_id = frame_id;
+    marker.header.stamp = stamp;
     marker.ns = tag.family;
     marker.id = tag.id;
     marker.type = visualization_msgs::Marker::CUBE;
@@ -40,7 +47,8 @@ void ApriltagVisualizer::PublishApriltagsMarker(
 
   for (int id : del_ids) {
     visualization_msgs::Marker marker;
-    marker.header = apriltags.header;
+    marker.header.frame_id = frame_id;
+    marker.header.stamp = stamp;
     marker.ns = "36h11";  // super hacky
     marker.id = id;
     marker.action = visualization_msgs::Marker::DELETE;

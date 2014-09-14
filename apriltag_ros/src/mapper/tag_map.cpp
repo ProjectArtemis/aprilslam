@@ -5,31 +5,36 @@
 #include <opencv2/calib3d/calib3d.hpp>
 namespace apriltag_ros {
 
-void TagMap::AddOrUpdate(int id, double size, const geometry_msgs::Pose &pose) {
-  auto it = FindById(id, tags_msg_.apriltags);
+void TagMap::AddOrUpdate(const Apriltag &tag_w,
+                         const geometry_msgs::Pose &pose) {
+  auto it = FindById(tag_w.id, tags_w_msg_.apriltags);
   if (it == tags_w().end()) {
     // Not in map, add to map
-    ROS_INFO_STREAM(id << " not in map");
+    AddTag(tag_w, pose);
   } else {
     // Already in map update
-    ROS_INFO_STREAM(id << "  in map");
+    UpdateTag(&(*it), pose);
   }
 }
 
-void TagMap::AddTag(const Apriltag &tag_c, const geometry_msgs::Pose &pose) {
-  Apriltag tag_w = tag_c;
-  tag_w.pose = pose;
-  SetCorners(&tag_w.corners, tag_w.pose, tag_w.size);
-  tag_w.center = tag_w.pose.position;
-  tags_msg_.apriltags.push_back(tag_w);
-  ROS_INFO("tag %d added to map", tag_c.id);
+void TagMap::UpdateTag(Apriltag *tag_w, const geometry_msgs::Pose &pose) {
+  tag_w->pose = pose;
+  SetCorners(&tag_w->corners, tag_w->pose, tag_w->size);
+  tag_w->center = tag_w->pose.position;
+}
+
+void TagMap::AddTag(const Apriltag &tag, const geometry_msgs::Pose &pose) {
+  Apriltag tag_w = tag;
+  UpdateTag(&tag_w, pose);
+  tags_w_msg_.apriltags.push_back(tag_w);
+  ROS_INFO("tag %d added to map", tag.id);
 }
 
 bool TagMap::AddFirstTag(const Apriltags &tags_c, int width, int height) {
   for (const Apriltag &tag_c : tags_c.apriltags) {
     if (IsInsideImageCenter(tag_c.center.x, tag_c.center.y, width, height, 3)) {
       // This magic number 3 means the border is 1/3 of the size
-      tags_msg_.header.stamp = tags_c.header.stamp;
+      tags_w_msg_.header.stamp = tags_c.header.stamp;
       // Creat tag in world frame and set to origin
       // Set the first tag to origin
       geometry_msgs::Pose pose;

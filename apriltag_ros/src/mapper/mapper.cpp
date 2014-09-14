@@ -14,9 +14,9 @@ Mapper::Mapper(double relinearize_thresh, int relinearize_skip)
       params_(ISAM2GaussNewtonParams(), relinearize_thresh, relinearize_skip),
       isam2_(params_),
       tag_noise_(noiseModel::Diagonal::Sigmas(
-          (Vector(6) << Vector3::Constant(0.05), Vector3::Constant(0.01)))),
+          (Vector(6) << Vector3::Constant(0.20), Vector3::Constant(0.1)))),
       small_noise_(noiseModel::Diagonal::Sigmas(
-          (Vector(6) << Vector3::Constant(0.05), Vector3::Constant(0.01)))) {}
+          (Vector(6) << Vector3::Constant(0.10), Vector3::Constant(0.05)))) {}
 
 void Mapper::AddPose(const geometry_msgs::Pose &pose) {
   pose_cnt++;
@@ -26,27 +26,25 @@ void Mapper::AddPose(const geometry_msgs::Pose &pose) {
 
 void Mapper::Initialize(const Apriltag &tag_w) {
   ROS_ASSERT_MSG(pose_cnt == 1, "Incorrect initial pose");
-  AddFirstLandmark(tag_w.id, tag_w.size);
+  AddLandmark(tag_w, Pose3());
   AddPrior(tag_w.id);
   init_ = true;
 }
 
 void Mapper::AddPrior(int landmark_id) {
   // A very strong prior on first pose and landmark
+  ROS_INFO("Add pose prior on: %d", pose_cnt);
   graph_.push_back(
       PriorFactor<Pose3>(Symbol('x', pose_cnt), pose_, small_noise_));
+  ROS_INFO("Add landmark prior on: %d", landmark_id);
   graph_.push_back(
       PriorFactor<Pose3>(Symbol('l', landmark_id), Pose3(), small_noise_));
 }
 
-void Mapper::AddFirstLandmark(int id, double size) {
-  AddLandmark(id, size, Pose3());
-}
-
-void Mapper::AddLandmark(int id, double size, const Pose3 &pose) {
-  initial_estimates_.insert(Symbol('l', id), pose);
-  all_ids_.insert(id);
-  all_sizes_[id] = size;
+void Mapper::AddLandmark(const Apriltag &tag_c, const Pose3 &pose) {
+  initial_estimates_.insert(Symbol('l', tag_c.id), pose);
+  all_ids_.insert(tag_c.id);
+  all_tags_c_[tag_c.id] = tag_c;
 }
 
 void Mapper::AddLandmarks(const std::vector<Apriltag> &tags_c) {
@@ -56,7 +54,7 @@ void Mapper::AddLandmarks(const std::vector<Apriltag> &tags_c) {
       const Pose3 &w_T_c = pose_;
       const Pose3 c_T_t = FromGeometryPose(tag_c.pose);
       const Pose3 w_T_t = w_T_c.compose(c_T_t);
-      AddLandmark(tag_c.id, tag_c.size, w_T_t);
+      AddLandmark(tag_c, w_T_t);
     }
   }
 }
@@ -79,7 +77,7 @@ void Mapper::Optimize(int num_iterations) {
 }
 
 void Mapper::Update(TagMap *map, geometry_msgs::Pose *pose) const {
-  ROS_ASSERT_MSG(all_ids_.size() == all_sizes_.size(), "id and size mismatch");
+  ROS_ASSERT_MSG(all_ids_.size() == all_tags_c_.size(), "id and size mismatch");
   Values results = isam2_.calculateEstimate();
   // Update the current pose
   const Pose3 &cam_pose = results.at<Pose3>(Symbol('x', pose_cnt));
@@ -94,8 +92,8 @@ void Mapper::Update(TagMap *map, geometry_msgs::Pose *pose) const {
     SetOrientation(&tag_pose.orientation, tag_pose3.rotation().toQuaternion());
     // This should not change the size of all_sizes_ because all_sizes_ and
     // all_ids_ should have the same size
-    auto it = all_sizes_.find(tag_id);
-    map->AddOrUpdate(tag_id, (*it).second, tag_pose);
+    auto it = all_tags_c_.find(tag_id);
+    map->AddOrUpdate(it->second, tag_pose);
   }
 }
 

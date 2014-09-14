@@ -30,8 +30,8 @@ class Mapper {
   void Clear();
 
  private:
-  void AddLandmark(int id, double size, const gtsam::Pose3& pose);
-  void AddFirstLandmark(int id, double size);
+  void AddLandmark(const apriltag_ros::Apriltag& tag_w,
+                   const gtsam::Pose3& pose);
   void AddPrior(int landmark_id);
 
   bool init_;
@@ -43,7 +43,7 @@ class Mapper {
   gtsam::noiseModel::Diagonal::shared_ptr tag_noise_;
   gtsam::noiseModel::Diagonal::shared_ptr small_noise_;
   std::set<int> all_ids_;
-  std::map<int, double> all_sizes_;
+  std::map<int, apriltag_ros::Apriltag> all_tags_c_;
 };
 
 gtsam::Pose3 FromGeometryPose(const geometry_msgs::Pose& pose);
