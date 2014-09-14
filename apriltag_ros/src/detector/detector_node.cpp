@@ -32,7 +32,7 @@ DetectorNode::DetectorNode(const ros::NodeHandle &nh,
   pub_apriltags_ = nh_.advertise<apriltag_ros::Apriltags>(
       "apriltags", 1, connect_cb, connect_cb);
   */
-  tag_viz_.set_color(rviz_helper::colors::RED);
+  tag_viz_.set_color(kr::rviz_helper::colors::RED);
   tag_viz_.set_alpha(0.75);
 }
 

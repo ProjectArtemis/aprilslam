@@ -23,10 +23,10 @@ class MapperNode {
         mapper_(0.04, 1),
         pose_viz_(nh, "traj"),
         tag_viz_(nh, "apriltags_map") {
-    pose_viz_.set_color(rviz_helper::colors::MAGENTA);
+    pose_viz_.set_color(kr::rviz_helper::colors::MAGENTA);
     pose_viz_.set_alpha(1);
     pose_viz_.set_scale(0.01);
-    tag_viz_.set_color(rviz_helper::colors::GREEN);
+    tag_viz_.set_color(kr::rviz_helper::colors::GREEN);
     tag_viz_.set_alpha(0.75);
   }
 
@@ -43,7 +43,7 @@ class MapperNode {
   std::string frame_id_;
   apriltag_ros::TagMap map_;
   apriltag_ros::Mapper mapper_;
-  rviz_helper::PoseVisualizer pose_viz_;
+  kr::rviz_helper::PoseVisualizer pose_viz_;
   apriltag_ros::ApriltagVisualizer tag_viz_;
   image_geometry::PinholeCameraModel model_;
 };
