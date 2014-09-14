@@ -24,10 +24,10 @@ void Mapper::AddPose(const geometry_msgs::Pose &pose) {
   initial_estimates_.insert(Symbol('x', pose_cnt), pose_);
 }
 
-void Mapper::Initialize(int landmark_id) {
+void Mapper::Initialize(const Apriltag &tag_w) {
   ROS_ASSERT_MSG(pose_cnt == 1, "Incorrect initial pose");
-  AddFirstLandmark(landmark_id);
-  AddPrior(landmark_id);
+  AddFirstLandmark(tag_w.id, tag_w.size);
+  AddPrior(tag_w.id);
   init_ = true;
 }
 
@@ -35,34 +35,37 @@ void Mapper::AddPrior(int landmark_id) {
   // A very strong prior on first pose and landmark
   graph_.push_back(
       PriorFactor<Pose3>(Symbol('x', pose_cnt), pose_, small_noise_));
-  graph_.push_back(PriorFactor<Pose3>(Symbol('l', landmark_id), gtsam::Pose3(),
-                                      small_noise_));
+  graph_.push_back(
+      PriorFactor<Pose3>(Symbol('l', landmark_id), Pose3(), small_noise_));
 }
 
-void Mapper::AddFirstLandmark(int id) { AddLandmark(id, Pose3()); }
+void Mapper::AddFirstLandmark(int id, double size) {
+  AddLandmark(id, size, Pose3());
+}
 
-void Mapper::AddLandmark(int id, const Pose3 &pose) {
+void Mapper::AddLandmark(int id, double size, const Pose3 &pose) {
   initial_estimates_.insert(Symbol('l', id), pose);
   all_ids_.insert(id);
+  all_sizes_[id] = size;
 }
 
-void Mapper::AddLandmarks(const Apriltags &tags) {
-  for (const Apriltag &tag : tags.apriltags) {
+void Mapper::AddLandmarks(const std::vector<Apriltag> &tags_c) {
+  for (const Apriltag &tag_c : tags_c) {
     // Only add landmark if it's not already added
-    if (all_ids_.find(tag.id) == all_ids_.end()) {
+    if (all_ids_.find(tag_c.id) == all_ids_.end()) {
       const Pose3 &w_T_c = pose_;
-      const Pose3 c_T_t = FromGeometryPose(tag.pose);
+      const Pose3 c_T_t = FromGeometryPose(tag_c.pose);
       const Pose3 w_T_t = w_T_c.compose(c_T_t);
-      AddLandmark(tag.id, w_T_t);
+      AddLandmark(tag_c.id, tag_c.size, w_T_t);
     }
   }
 }
 
-void Mapper::AddFactors(const Apriltags &tags) {
+void Mapper::AddFactors(const std::vector<Apriltag> &tags_c) {
   Symbol x_i('x', pose_cnt);
-  for (const Apriltag &tag : tags.apriltags) {
+  for (const Apriltag &tag_c : tags_c) {
     graph_.push_back(BetweenFactor<Pose3>(
-        x_i, Symbol('l', tag.id), FromGeometryPose(tag.pose), tag_noise_));
+        x_i, Symbol('l', tag_c.id), FromGeometryPose(tag_c.pose), tag_noise_));
   }
 }
 
@@ -76,12 +79,24 @@ void Mapper::Optimize(int num_iterations) {
 }
 
 void Mapper::Update(TagMap *map, geometry_msgs::Pose *pose) const {
+  ROS_ASSERT_MSG(all_ids_.size() == all_sizes_.size(), "id and size mismatch");
   Values results = isam2_.calculateEstimate();
   // Update the current pose
-  const Pose3 &pose3 = results.at<Pose3>(Symbol('x', pose_cnt));
-  SetPosition(&pose->position, pose3.x(), pose3.y(), pose3.z());
-  SetOrientation(&pose->orientation, pose3.rotation().toQuaternion());
+  const Pose3 &cam_pose = results.at<Pose3>(Symbol('x', pose_cnt));
+  SetPosition(&pose->position, cam_pose.x(), cam_pose.y(), cam_pose.z());
+  SetOrientation(&pose->orientation, cam_pose.rotation().toQuaternion());
   // Update the current map
+  for (const int tag_id : all_ids_) {
+    const Pose3 &tag_pose3 = results.at<Pose3>(Symbol('l', tag_id));
+    geometry_msgs::Pose tag_pose;
+    SetPosition(&tag_pose.position, tag_pose3.x(), tag_pose3.y(),
+                tag_pose3.z());
+    SetOrientation(&tag_pose.orientation, tag_pose3.rotation().toQuaternion());
+    // This should not change the size of all_sizes_ because all_sizes_ and
+    // all_ids_ should have the same size
+    auto it = all_sizes_.find(tag_id);
+    map->AddOrUpdate(tag_id, (*it).second, tag_pose);
+  }
 }
 
 void Mapper::Clear() {

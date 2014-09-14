@@ -28,17 +28,17 @@ void MapperNode::TagsCb(const apriltag_ros::ApriltagsConstPtr& tags_msg) {
   }
   // Do nothing if no pose can be estimated
   geometry_msgs::Pose pose;
-  if (!map_.EstimatePose(*tags_msg, model_.fullIntrinsicMatrix(),
+  if (!map_.EstimatePose(tags_msg->apriltags, model_.fullIntrinsicMatrix(),
                          model_.distortionCoeffs(), &pose)) {
     ROS_WARN_THROTTLE(1, "No 2D-3D correspondence.");
     return;
   }
   // Now that with the initial pose calculated, we can do some mapping
   mapper_.AddPose(pose);
-  mapper_.AddFactors(*tags_msg);
+  mapper_.AddFactors(tags_msg->apriltags);
   if (mapper_.init()) {
     // This will only add new landmarks
-    mapper_.AddLandmarks(*tags_msg);
+    mapper_.AddLandmarks(tags_msg->apriltags);
     mapper_.Optimize();
     // Get latest estimates from mapper and put into map
     mapper_.Update(&map_, &pose);
@@ -47,9 +47,9 @@ void MapperNode::TagsCb(const apriltag_ros::ApriltagsConstPtr& tags_msg) {
   } else {
     // This will add first landmark at origin and fix scale for first pose and
     // first landmark
-    mapper_.Initialize(map_.first_tag_id());
+    mapper_.Initialize(map_.first_tag());
   }
-  /// @todo: remember to replace this pose with optimized pose later
+  // Publish updated pose and map
   pose_viz_.PublishPose(pose, frame_id_, tags_msg->header.stamp);
   tag_viz_.PublishApriltagsMarker(map_.ToMsg());
 }

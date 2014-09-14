@@ -24,14 +24,14 @@ class Mapper {
   void Optimize(int num_iterations = 1);
   void Update(apriltag_ros::TagMap* map, geometry_msgs::Pose* pose) const;
   void AddPose(const geometry_msgs::Pose& pose);
-  void AddFactors(const apriltag_ros::Apriltags& tags);
-  void AddLandmarks(const apriltag_ros::Apriltags& tags);
-  void Initialize(int landmark_id);
+  void AddFactors(const std::vector<apriltag_ros::Apriltag>& tags_c);
+  void AddLandmarks(const std::vector<apriltag_ros::Apriltag>& tags_c);
+  void Initialize(const Apriltag& tag_w);
   void Clear();
 
  private:
-  void AddLandmark(int id, const gtsam::Pose3& pose);
-  void AddFirstLandmark(int id);
+  void AddLandmark(int id, double size, const gtsam::Pose3& pose);
+  void AddFirstLandmark(int id, double size);
   void AddPrior(int landmark_id);
 
   bool init_;
@@ -43,6 +43,7 @@ class Mapper {
   gtsam::noiseModel::Diagonal::shared_ptr tag_noise_;
   gtsam::noiseModel::Diagonal::shared_ptr small_noise_;
   std::set<int> all_ids_;
+  std::map<int, double> all_sizes_;
 };
 
 gtsam::Pose3 FromGeometryPose(const geometry_msgs::Pose& pose);

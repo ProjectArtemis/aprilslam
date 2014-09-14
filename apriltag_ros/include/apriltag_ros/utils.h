@@ -12,7 +12,8 @@ namespace apriltag_ros {
 bool IsInsideImageCenter(double x, double y, int w, int h, double k);
 
 void SetPose(geometry_msgs::Pose* pose,
-             const Eigen::Quaterniond& wxyz, const Eigen::Vector3d& xyz);
+             const Eigen::Quaterniond& wxyz = Eigen::Quaterniond(1, 0, 0, 0),
+             const Eigen::Vector3d& xyz = Eigen::Vector3d(0, 0, 0));
 
 void SetPosition(geometry_msgs::Point* pos, const Eigen::Vector3d& xyz);
 void SetPosition(geometry_msgs::Point* pos, double x = 0, double y = 0,
