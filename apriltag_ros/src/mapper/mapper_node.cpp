@@ -8,7 +8,7 @@ void MapperNode::TagsCb(const apriltag_ros::ApriltagsConstPtr& tags_msg) {
     ROS_WARN_THROTTLE(1, "No tags detected.");
     return;
   }
-  // Also do nothing if camera info not received
+  // Do nothing if camera info not received
   if (!model_.initialized()) {
     ROS_WARN_THROTTLE(1, "No cinfo received");
     return;
@@ -26,24 +26,32 @@ void MapperNode::TagsCb(const apriltag_ros::ApriltagsConstPtr& tags_msg) {
     }
     ROS_INFO("TagMap initialized.");
   }
-  // Again don't do anything if no pose can be estimated
+  // Do nothing if no pose can be estimated
   geometry_msgs::Pose pose;
   if (!map_.EstimatePose(*tags_msg, model_.fullIntrinsicMatrix(),
                          model_.distortionCoeffs(), &pose)) {
     ROS_WARN_THROTTLE(1, "No 2D-3D correspondence.");
     return;
   }
-  pose_viz_.PublishPose(pose, frame_id_, tags_msg->header.stamp);
-  /*
-  mapper_.AddPose();
-  mapper_.AddLandmarks();
-  mapper_.AddFactors();
+  // Now that with the initial pose calculated, we can do some mapping
+  mapper_.AddPose(pose);
+  mapper_.AddFactors(*tags_msg);
   if (mapper_.init()) {
-    mapper_.Update(1);
+    // This will only add new landmarks
+    mapper_.AddLandmarks(*tags_msg);
+    mapper_.Update();
+    // Get latest estimates from mapper and put into map
+
+    // Prepare for next iteration
+    mapper_.Clear();
   } else {
-    mapper_.FixScale();
+    // This will add first landmark at origin and fix scale for first pose and
+    // first landmark
+    mapper_.Initialize(map_.first_tag_id());
   }
-  */
+  /// @todo: remember to replace this pose with optimized pose later
+  pose_viz_.PublishPose(pose, frame_id_, tags_msg->header.stamp);
+  tag_viz_.PublishApriltagsMarker(map_.ToMsg());
 }
 
 void MapperNode::CinfoCb(const sensor_msgs::CameraInfoConstPtr& cinfo_msg) {

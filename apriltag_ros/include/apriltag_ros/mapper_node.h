@@ -6,6 +6,7 @@
 #include <sensor_msgs/CameraInfo.h>
 #include <image_geometry/pinhole_camera_model.h>
 #include <rviz_helper/visualizer.h>
+#include "apriltag_ros/visualizer.h"
 
 #include "apriltag_ros/mapper.h"
 #include "apriltag_ros/tag_map.h"
@@ -21,10 +22,13 @@ class MapperNode {
         frame_id_(frame_id),
         map_(frame_id),
         mapper_(0.04, 1),
-        pose_viz_(nh, "traj") {
+        pose_viz_(nh, "traj"),
+        tag_viz_(nh, "apriltags_map") {
     pose_viz_.set_color(rviz_helper::colors::MAGENTA);
     pose_viz_.set_alpha(1);
     pose_viz_.set_scale(0.01);
+    tag_viz_.set_color(rviz_helper::colors::GREEN);
+    tag_viz_.set_alpha(0.75);
   }
 
  private:
@@ -38,6 +42,7 @@ class MapperNode {
   apriltag_ros::TagMap map_;  ///< map will be in world frame
   apriltag_ros::Mapper mapper_;
   rviz_helper::PoseVisualizer pose_viz_;
+  apriltag_ros::ApriltagVisualizer tag_viz_;
   image_geometry::PinholeCameraModel model_;
 };
 

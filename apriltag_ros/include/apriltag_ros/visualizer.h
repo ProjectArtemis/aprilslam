@@ -13,10 +13,10 @@ namespace apriltag_ros {
 
 class ApriltagVisualizer {
  public:
-  ApriltagVisualizer(const ros::NodeHandle& nh)
+  ApriltagVisualizer(const ros::NodeHandle& nh, const std::string& topic)
       : nh_(nh),
         pub_markers_(nh_.advertise<visualization_msgs::MarkerArray>(
-            "apriltags_marker", 1)) {}
+            topic, 1)) {}
 
   void set_color(const rviz::Color& color) {
     color_.r = color.r_;

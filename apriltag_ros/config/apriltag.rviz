@@ -9,8 +9,6 @@ Panels:
         - /MarkerArray1/Namespaces1
         - /TF1/Frames1
         - /TF1/Tree1
-        - /Axes1
-        - /Marker1
       Splitter Ratio: 0.5
     Tree Height: 696
   - Class: rviz/Selection
@@ -56,6 +54,14 @@ Visualization Manager:
     - Class: rviz/MarkerArray
       Enabled: true
       Marker Topic: /apriltag/apriltags_marker
+      Name: MarkerArray
+      Namespaces:
+        36h11: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /apriltag/apriltags_map
       Name: MarkerArray
       Namespaces:
         36h11: true
@@ -120,7 +126,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 3.93856
+      Distance: 3.35772
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
@@ -132,10 +138,10 @@ Visualization Manager:
         Z: 0
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 1.0002
+      Pitch: 1.5002
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.66852
+      Yaw: 4.53351
     Saved: ~
 Window Geometry:
   Displays:

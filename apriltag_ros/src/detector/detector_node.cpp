@@ -24,7 +24,7 @@ DetectorNode::DetectorNode(const ros::NodeHandle &nh,
           it_.subscribeCamera("image_raw", 1, &DetectorNode::CameraCb, this)),
       pub_tags_(nh_.advertise<apriltag_ros::Apriltags>("apriltags", 1)),
       tag_detector_(AprilTags::tagCodes36h11),
-      tag_viz_(nh) {
+      tag_viz_(nh, "apriltags_marker") {
   // Do nothing if nobody subscribes
   /*
   ros::SubscriberStatusCallback connect_cb =
@@ -33,7 +33,7 @@ DetectorNode::DetectorNode(const ros::NodeHandle &nh,
       "apriltags", 1, connect_cb, connect_cb);
   */
   tag_viz_.set_color(rviz_helper::colors::RED);
-  tag_viz_.set_alpha(0.5);
+  tag_viz_.set_alpha(0.75);
 }
 
 void DetectorNode::ConnectCb() {
