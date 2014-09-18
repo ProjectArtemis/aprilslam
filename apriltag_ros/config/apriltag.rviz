@@ -6,7 +6,9 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /MarkerArray1
         - /MarkerArray1/Namespaces1
+        - /MarkerArray2
         - /TF1/Frames1
         - /TF1/Tree1
       Splitter Ratio: 0.5
@@ -53,7 +55,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/MarkerArray
       Enabled: true
-      Marker Topic: /apriltag/apriltags_marker
+      Marker Topic: /mv_25001185/apriltags_map
       Name: MarkerArray
       Namespaces:
         36h11: true
@@ -61,7 +63,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/MarkerArray
       Enabled: true
-      Marker Topic: /apriltag/apriltags_map
+      Marker Topic: /mv_25001185/apriltags_marker
       Name: MarkerArray
       Namespaces:
         36h11: true
@@ -99,7 +101,7 @@ Visualization Manager:
       Marker Topic: /apriltag/traj
       Name: Marker
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
       Value: true
   Enabled: true
@@ -126,7 +128,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 3.35772
+      Distance: 11.68
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1

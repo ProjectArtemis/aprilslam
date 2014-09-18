@@ -3,7 +3,6 @@
     <arg name="test" default="true"/>
     <arg name="bagfile" default="/home/chao/Workspace/bag/pennapps/apriltag5.bag"/>
     <arg name="camera" default="/mv_25001185"/>
-    <arg name="ns" default="apriltag"/>
     <arg name="detector" default="true"/>
     <arg name="mapper" default="true"/>
 
@@ -21,14 +20,12 @@
     <include if="$(arg detector)"
         file="$(find apriltag_ros)/launch/detector.launch">
         <arg name="camera" value="$(arg camera)"/>
-        <arg name="ns" value="$(arg ns)"/>
     </include>
 
     <!-- Mapper Node -->
     <include if="$(arg mapper)"
         file="$(find apriltag_ros)/launch/mapper.launch">
         <arg name="camera" value="$(arg camera)"/>
-        <arg name="ns" value="$(arg ns)"/>
     </include>
 
     <!--Rviz-->

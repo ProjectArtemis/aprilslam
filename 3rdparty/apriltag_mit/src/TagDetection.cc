@@ -159,7 +159,9 @@ void TagDetection::getRelativeQT(double tag_size, const cv::Matx33d &K,
   // Copied from kr_math pose
   const double rn = r.norm();
   Eigen::Vector3d rnorm(0.0, 0.0, 0.0);
-  if (rn > std::numeric_limits<double>::epsilon() * 10) rnorm = r / rn;
+  if (rn > std::numeric_limits<double>::epsilon() * 10) {
+    rnorm = r / rn;
+  }
   quat = Eigen::AngleAxis<double>(rn, rnorm);
 }
 
