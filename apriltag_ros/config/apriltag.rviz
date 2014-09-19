@@ -55,7 +55,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/MarkerArray
       Enabled: true
-      Marker Topic: /mv_25001185/apriltags_map
+      Marker Topic: /mv_stereo/left/apriltags_map
       Name: MarkerArray
       Namespaces:
         36h11: true
@@ -63,7 +63,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/MarkerArray
       Enabled: true
-      Marker Topic: /mv_25001185/apriltags_marker
+      Marker Topic: /mv_stereo/left/apriltags_marker
       Name: MarkerArray
       Namespaces:
         36h11: true
@@ -74,7 +74,7 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        mv_25001185:
+        stereo:
           Value: true
         world:
           Value: true
@@ -85,7 +85,7 @@ Visualization Manager:
       Show Names: true
       Tree:
         world:
-          mv_25001185:
+          stereo:
             {}
       Update Interval: 0
       Value: true
@@ -102,6 +102,14 @@ Visualization Manager:
       Name: Marker
       Namespaces:
         {}
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /mv_stereo/left/traj
+      Name: Marker
+      Namespaces:
+        "": true
       Queue Size: 100
       Value: true
   Enabled: true
@@ -128,7 +136,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 11.68
+      Distance: 7.00444
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
@@ -140,10 +148,10 @@ Visualization Manager:
         Z: 0
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 1.5002
+      Pitch: 0.6802
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.53351
+      Yaw: 4.44352
     Saved: ~
 Window Geometry:
   Displays:

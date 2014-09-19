@@ -14,10 +14,9 @@
 namespace apriltag_ros {
 
 DetectorNode::DetectorNode(const ros::NodeHandle &nh,
-                           const std::string &tag_family, double tag_size)
+                           const ros::NodeHandle &pnh)
     : nh_(nh),
-      tag_family_(tag_family),
-      tag_size_(tag_size),
+      tag_family_("36h11"),
       cam_calibrated_(true),
       it_(nh),
       sub_camera_(
@@ -32,6 +31,9 @@ DetectorNode::DetectorNode(const ros::NodeHandle &nh,
   pub_apriltags_ = nh_.advertise<apriltag_ros::Apriltags>(
       "apriltags", 1, connect_cb, connect_cb);
   */
+  if (!pnh.getParam("size", tag_size_)) {
+    throw std::runtime_error("No tag size specified");
+  }
   tag_viz_.set_color(kr::rviz_helper::colors::RED);
   tag_viz_.set_alpha(0.75);
 }

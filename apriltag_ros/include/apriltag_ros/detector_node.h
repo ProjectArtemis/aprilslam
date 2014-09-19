@@ -18,8 +18,7 @@ namespace apriltag_ros {
 
 class DetectorNode {
  public:
-  DetectorNode(const ros::NodeHandle &nh, const std::string &tag_family_,
-               double tag_size);
+  DetectorNode(const ros::NodeHandle &nh, const ros::NodeHandle &pnh);
 
  private:
   void ConnectCb();
