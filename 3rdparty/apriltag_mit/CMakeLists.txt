@@ -9,8 +9,10 @@ find_package(cmake_modules)
 find_package(Eigen REQUIRED)
 find_package(OpenCV REQUIRED)
 
-include_directories(include)
-include_directories(${OpenCV_INCLUDE_DIRS} ${Eigen_INCLUDE_DIRS})
+include_directories(include
+    ${OpenCV_INCLUDE_DIRS}
+    ${Eigen_INCLUDE_DIRS}
+    )
 
 if(USE_ROS)
     find_package(catkin REQUIRED)
@@ -42,6 +44,8 @@ target_link_libraries(test_apriltag_mit
     ${PROJECT_NAME}
     )
 
-add_dependencies(${PROJECT_NAME}
-    ${catkin_EXPORTED_TARGETS}
-    )
+if(USE_ROS)
+    add_dependencies(${PROJECT_NAME}
+        ${catkin_EXPORTED_TARGETS}
+        )
+endif()
