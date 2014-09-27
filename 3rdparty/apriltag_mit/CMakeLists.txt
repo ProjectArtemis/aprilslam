@@ -56,3 +56,9 @@ target_link_libraries(test_apriltag_mit
     ${OpenCV_LIBRARIES}
     ${PROJECT_NAME}
     )
+
+if(USE_ROS)
+    add_dependencies(${PROJECT_NAME}
+        ${catkin_EXPORTED_TARGETS}
+        )
+endif()
