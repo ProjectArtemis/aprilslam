@@ -10,7 +10,7 @@
 
 namespace AprilTags {
 
-using Pointf = std::pair<float, float>;
+typedef std::pair<float, float> Pointf;
 
 struct TagDetection {
 

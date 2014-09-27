@@ -121,12 +121,16 @@ Eigen::Matrix4d TagDetection::getRelativeTransform(double tag_size, double fx,
   });
   */
 
-  std::vector<cv::Point3f> objPts = {
-      {-s, -s, 0}, {s, -s, 0}, {s, s, 0}, {-s, s, 0}};
-  std::vector<cv::Point2f> imgPts = {{p[0].first, p[0].second},
-                                     {p[1].first, p[1].second},
-                                     {p[2].first, p[2].second},
-                                     {p[3].first, p[3].second}};
+  std::vector<cv::Point3f> objPts;
+  std::vector<cv::Point2f> imgPts;
+  objPts.push_back(cv::Point3f(-s, -s, 0));
+  objPts.push_back(cv::Point3f(s, -s, 0));
+  objPts.push_back(cv::Point3f(s, s, 0));
+  objPts.push_back(cv::Point3f(-s, s, 0));
+  imgPts.push_back(cv::Point2f(p[0].first, p[0].second));
+  imgPts.push_back(cv::Point2f(p[1].first, p[1].second));
+  imgPts.push_back(cv::Point2f(p[2].first, p[2].second));
+  imgPts.push_back(cv::Point2f(p[3].first, p[3].second));
 
   cv::Mat rvec, tvec;
   cv::Matx33f cameraMatrix(fx, 0, px, 0, fy, py, 0, 0, 1);
@@ -170,13 +174,17 @@ void TagDetection::getRelativeRT(double tag_size, const cv::Matx33d &K,
                                  cv::Mat &tvec) const {
   float s = tag_size / 2.;
   // tag corners in tag frame, which we call object
-  std::vector<cv::Point3f> p_obj = {
-      {-s, -s, 0}, {s, -s, 0}, {s, s, 0}, {-s, s, 0}};
+  std::vector<cv::Point3f> p_obj;
+  p_obj.push_back(cv::Point3f(-s, -s, 0));
+  p_obj.push_back(cv::Point3f(s, -s, 0));
+  p_obj.push_back(cv::Point3f(s, s, 0));
+  p_obj.push_back(cv::Point3f(-s, s, 0));
   // pixels coordinates in image frame
-  std::vector<cv::Point2f> p_img = {{p[0].first, p[0].second},
-                                    {p[1].first, p[1].second},
-                                    {p[2].first, p[2].second},
-                                    {p[3].first, p[3].second}};
+  std::vector<cv::Point2f> p_img;
+  p_img.push_back(cv::Point2f(p[0].first, p[0].second));
+  p_img.push_back(cv::Point2f(p[1].first, p[1].second));
+  p_img.push_back(cv::Point2f(p[2].first, p[2].second));
+  p_img.push_back(cv::Point2f(p[3].first, p[3].second));
   cv::solvePnP(p_obj, p_img, K, D, rvec, tvec);
 }
 
