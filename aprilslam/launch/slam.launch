@@ -1,0 +1,17 @@
+<launch>
+
+    <!--Detector Node-->
+    <include file="$(find aprilslam)/launch/detector.launch">
+        <arg name="camera" value="/stereo/cam0"/>
+	<arg name="size" value="0.172"/>
+    </include>
+
+    <include file="$(find aprilslam)/launch/mapper.launch">
+        <arg name="camera" value="/stereo/cam0"/>
+    </include>
+
+    <node name="rviz" pkg="rviz" type="rviz"
+        args="-d $(find aprilslam)/config/apriltag.rviz">
+    </node>
+
+</launch>

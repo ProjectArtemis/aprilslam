@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+  <name>apriltag_mit</name>
+  <version>0.1.0</version>
+  <description>
+    A C++ Apriltag library
+  </description>
+  <author>Michael Kaess</author>
+  <maintainer email="mhkabir98@gmail.com">Mohammed Kabir</maintainer>
+  <license>GPLv3</license>
+
+  <!-- Dependencies which this package needs to build itself. -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies needed to compile this package. -->
+  <build_depend>cmake_modules</build_depend>
+
+</package>

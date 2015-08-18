@@ -1,7 +1,0 @@
-<launch>
-    <arg name="camera" default="/camera"/>
-
-    <node pkg="apriltag_ros" type="mapper_node" name="mapper"
-        output="screen" ns="$(arg camera)">
-    </node>
-</launch>
